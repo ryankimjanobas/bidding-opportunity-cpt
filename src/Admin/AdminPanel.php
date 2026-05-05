@@ -363,6 +363,7 @@ if (!class_exists('AdminPanel'))
         <input
           class="bidding-opportunity-admin-input"
           type="number"
+          step=".01"
           value="<?php echo $abc; ?>"
           name="<?php echo $this->variable_prefix;?>abc"
           placeholder="Approved Budget for the Contract"
@@ -661,7 +662,7 @@ if (!class_exists('AdminPanel'))
           echo get_post_meta($post_id, $this->variable_prefix . "key_title", true);
           break;
         case "bo_abc":
-          echo '₱' . number_format(intval(get_post_meta($post_id, $this->variable_prefix . "key_abc", true)), 2);
+          echo '₱' . number_format(get_post_meta($post_id, $this->variable_prefix . "key_abc", true), 2);
           break;
         case "bo_publish_date":
           echo date('F j, Y', strtotime(get_post_meta($post_id, $this->variable_prefix . "key_publish_date", true)));
