@@ -1,5 +1,5 @@
 {
-    "name": "bid-opportunity-cpt",
+    "name": "acer/bid-opportunity-cpt",
     "description": "A simple wordpress plugin that creates a custom post type named Bid Opprtunities",
     "type": "project",
     "autoload": {

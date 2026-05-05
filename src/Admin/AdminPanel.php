@@ -715,6 +715,5 @@ if (!class_exists('AdminPanel'))
           break;
       }
     }       
-  }
-  
+  }    
 }
