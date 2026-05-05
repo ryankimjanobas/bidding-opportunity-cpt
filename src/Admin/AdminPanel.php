@@ -688,8 +688,8 @@ if (!class_exists('AdminPanel'))
           echo "<span class='" . $status_class . "'>" . $status_name . "</span>";
 
           if(!empty($term) && $term[0]->slug === 'awarded') {
-            echo "<br /><small>Supplier:</small> " . get_post_meta($post_id, $this->variable_prefix . "key_supplier_name", true);
-            echo '<br /><small>Contract Amount:</small> ₱' . number_format(get_post_meta($post_id, $this->variable_prefix . "key_contract_amount", true), 2);
+            echo get_post_meta($post_id, $this->variable_prefix . "key_supplier_name", true) ? "<br /><small>Supplier:</small> " . get_post_meta($post_id, $this->variable_prefix . "key_supplier_name", true) : '';
+            echo get_post_meta($post_id, $this->variable_prefix . "key_contract_amount", true) ? '<br /><small>Contract Amount:</small> ₱' . number_format(get_post_meta($post_id, $this->variable_prefix . "key_contract_amount", true), 2) : '';
           }   
           
           break;
