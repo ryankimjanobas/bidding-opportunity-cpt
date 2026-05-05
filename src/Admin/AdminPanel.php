@@ -488,6 +488,7 @@ if (!class_exists('AdminPanel'))
           <input
             class="bidding-opportunity-admin-input"
             type="number"
+            step=".01"
             value="<?php echo $contract_amount; ?>"
             name="<?php echo $this->variable_prefix; ?>contract_amount"
             placeholder="Contract Amount"
@@ -688,7 +689,7 @@ if (!class_exists('AdminPanel'))
 
           if(!empty($term) && $term[0]->slug === 'awarded') {
             echo "<br /><small>Supplier:</small> " . get_post_meta($post_id, $this->variable_prefix . "key_supplier_name", true);
-            echo '<br /><small>Contract Amount:</small> ₱' . number_format(intval(get_post_meta($post_id, $this->variable_prefix . "key_contract_amount", true)), 2);
+            echo '<br /><small>Contract Amount:</small> ₱' . number_format(get_post_meta($post_id, $this->variable_prefix . "key_contract_amount", true), 2);
           }   
           
           break;
