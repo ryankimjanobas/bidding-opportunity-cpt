@@ -1,0 +1,74 @@
+
+/**
+ * @package  BiddingOpportunityPlugin
+ * 
+ */
+
+.text-center {
+  text-align: center !important;
+}
+
+.bid-opportunity-cpt-datatable-container {
+  text-align: center;
+  box-shadow: 2px 2px 5px #bebebe,
+    -1px -1px 10px #bebebe;
+  padding: 20px;
+  border-radius: 5px;
+  overflow: auto;
+}
+
+.bid-opportunity-cpt-datatable-container
+.title{
+  color: #686565;
+  font-size: 20px;
+}
+
+.bid-opportunity-cpt-datatable-container
+.bid-opportunity-cpt-datatable {
+  overflow-x: auto;
+  text-align: left;
+  width: 100%;
+  border: none;
+  border-bottom: 2px solid #bebebe;
+}
+
+.bid-opportunity-cpt-datatable-container
+.bid-opportunity-cpt-datatable thead {
+  text-align: center;
+  color: #555353;
+  font-weight: bold;
+  border-top: 2px solid #FFDF94;
+  border-bottom: 2px solid #FFDF94;
+}
+
+.bid-opportunity-cpt-datatable-container
+.bid-opportunity-cpt-datatable tr:nth-child(even) {
+  background: #dfdfdf;
+}
+
+.bid-opportunity-cpt-datatable-container
+.bid-opportunity-cpt-datatable tbody tr:hover {
+  background-color: #bebebe;
+}
+
+.bid-opportunity-cpt-datatable-container
+.bid-opportunity-cpt-datatable th,
+.bid-opportunity-cpt-datatable td {
+  padding: 10px;
+  border: none;
+  text-align: left;
+}
+
+.bid-opportunity-datatable-attachment-icon {
+  filter: invert(30%) sepia(83%) saturate(2440%) hue-rotate(212deg) brightness(101%) contrast(96%)
+}
+
+ /* DataTables override styles */
+
+.dt-container select.dt-input {
+  min-width: 60px;
+}
+
+.dt-container .dt-input {
+  border: 1px solid #d3d3d3 !important;
+}        
