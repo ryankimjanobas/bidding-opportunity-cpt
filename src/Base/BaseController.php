@@ -39,7 +39,7 @@ if (!class_exists('BaseController')) {
 
 			$this->modes_of_procurement = array(
 				'public' => 'Public Bidding',
-				'alternative' => 'Alternative Mode of Procurement'
+				'alternative' => 'Alternative Method of Procurement'
 			);
 
 			$this->required_status = array(
