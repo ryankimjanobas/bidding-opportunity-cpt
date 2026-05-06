@@ -5,7 +5,7 @@ The project is a simple wordpress plugin that creates a custom post type (name: 
 The plugin has two types of bidding opportunity namely Public Bidding and Alternative Method of Procurement, it also has statusses with default values of (Close, Active and Awarded),
 it has the ability to add statusses as many as you like and can set bidding status according to your needs. When the bidding closing date is equal to current day the status of the bidding is automatically set to close.
 
-  - Close status means the project closing date elapsed
+  - Close status means the bidding closing date elapsed
   - Active status means tha bidding is active
   - Awarded status means the bidding is completed and awarded to a certain supplier
 
