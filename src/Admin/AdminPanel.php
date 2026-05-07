@@ -532,7 +532,7 @@ if (!class_exists('AdminPanel'))
       $bo_abc = isset($_POST[$this->variable_prefix . 'abc']) ? sanitize_text_field($_POST[$this->variable_prefix . 'abc']) : "";
       $bo_publish_date = isset($_POST[$this->variable_prefix . 'publish_date']) ? sanitize_text_field($_POST[$this->variable_prefix . 'publish_date']) : "";
       $bo_closing_date = isset($_POST[$this->variable_prefix . 'closing_date']) ? sanitize_text_field($_POST[$this->variable_prefix . 'closing_date']) : "";
-      $attachment = isset($_POST[$this->variable_prefix . 'attachment']) ? sanitize_text_field($_POST[$this->variable_prefix . 'attachment']) : "";            
+      $attachment = isset($_POST[$this->variable_prefix . 'attachment']) ? sanitize_url($_POST[$this->variable_prefix . 'attachment']) : "";            
       $mode = isset($_POST[$this->variable_prefix . 'mode']) ? sanitize_text_field($_POST[$this->variable_prefix . 'mode']) : "";
       $prebid_date = isset($_POST[$this->variable_prefix . 'prebid_date']) ? sanitize_text_field($_POST[$this->variable_prefix . 'prebid_date']) : "";
       $supplemental_document = isset($_POST[$this->variable_prefix . 'supplemental_document']) ? sanitize_text_field($_POST[$this->variable_prefix . 'supplemental_document']) : "";
