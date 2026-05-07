@@ -663,7 +663,7 @@ if (!class_exists('AdminPanel'))
           echo get_post_meta($post_id, $this->variable_prefix . "key_title", true);
           break;
         case "bo_abc":
-          echo '₱' . number_format(get_post_meta($post_id, $this->variable_prefix . "key_abc", true), 2);
+          echo get_post_meta($post_id, $this->variable_prefix . "key_abc", true) ? '₱' . number_format(get_post_meta($post_id, $this->variable_prefix . "key_abc", true), 2) : '';
           break;
         case "bo_publish_date":
           echo date('F j, Y', strtotime(get_post_meta($post_id, $this->variable_prefix . "key_publish_date", true)));
