@@ -145,8 +145,8 @@ if (!class_exists('AjaxScript')) {
           $prebid_date = get_post_meta(get_the_ID(), $this->variable_prefix . 'key_prebid_date', true) ? date('F j, Y', strtotime(get_post_meta(get_the_ID(), $this->variable_prefix . 'key_prebid_date', true))) : '';
           $supplier_name = get_post_meta(get_the_ID(), $this->variable_prefix . 'key_supplier_name', true) ? get_post_meta(get_the_ID(), $this->variable_prefix . 'key_supplier_name', true) : '';
           $contract_amount = get_post_meta(get_the_ID(), $this->variable_prefix . 'key_contract_amount', true) ? '₱' . number_format(get_post_meta(get_the_ID(), $this->variable_prefix . 'key_contract_amount', true), 2) : '';
-          $supplemental = "<a title='Click to see Attachment' href='" . get_post_meta(get_the_ID(), $this->variable_prefix . 'key_attachment', true) . "' target='_blank'>" . get_post_meta(get_the_ID(), $this->variable_prefix . 'key_supplemental_document', true) . "</a>";
-          $attachment = "<a href='" . get_post_meta(get_the_ID(), $this->variable_prefix . 'key_attachment', true) . "' target='_blank' title='Click to see Attachment' class='bid-opportunity-datatable-attachment-icon'>
+          $supplemental = "<a title='Click to see Attachment' href='" . esc_url(get_post_meta(get_the_ID(), $this->variable_prefix . 'key_attachment', true)) . "' target='_blank'>" . get_post_meta(get_the_ID(), $this->variable_prefix . 'key_supplemental_document', true) . "</a>";
+          $attachment = "<a href='" . esc_url(get_post_meta(get_the_ID(), $this->variable_prefix . 'key_attachment', true)) . "' target='_blank' title='Click to see Attachment' class='bid-opportunity-datatable-attachment-icon'>
                 <img src='" . $this->plugin_url . "/assets/images/external-link.svg" . "' alt='External Link' width='25' />
                 </a>";
 
