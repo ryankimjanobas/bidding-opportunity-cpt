@@ -726,7 +726,7 @@ if (!class_exists('AdminPanel'))
           break;
         case "bo_attachment":
           ?>
-          <a href="<?php echo get_post_meta($post_id, $this->variable_prefix . "key_attachment", true); ?>" target="_blank" rel="noopener noreferrer">            
+          <a href="<?php echo esc_url(get_post_meta($post_id, $this->variable_prefix . "key_attachment", true)); ?>" target="_blank" rel="noopener noreferrer">            
             <span class="dashicons dashicons-external"></span>
           </a>
         <?php
