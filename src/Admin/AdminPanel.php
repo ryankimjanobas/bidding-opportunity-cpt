@@ -312,11 +312,26 @@ if (!class_exists('AdminPanel'))
       /* 
       * metabox layout
       */                         
+      
+      wp_nonce_field( $this->variable_prefix . 'my_cpt_save_action', $this->variable_prefix . 'my_cpt_nonce' );
+
+      //get field values
+      $title = get_post_meta($post->ID, $this->variable_prefix . "key_philgeps_registration_no", true);
+      $mode = get_post_meta($post->ID, $this->variable_prefix . "key_mode", true);
+      $title = get_post_meta($post->ID, $this->variable_prefix . "key_title", true);
+      $abc = get_post_meta($post->ID, $this->variable_prefix . "key_abc", true);
+      $publish_date = get_post_meta($post->ID, $this->variable_prefix . "key_publish_date", true);
+      $closing_date = get_post_meta($post->ID, $this->variable_prefix . "key_closing_date", true);
+      $prebid_date = get_post_meta($post->ID, $this->variable_prefix . "key_prebid_date", true);
+      $supplemental = get_post_meta($post->ID, $this->variable_prefix . "key_supplemental_document", true);
+      $bid_docs = get_post_meta($post->ID, $this->variable_prefix . "key_attachment", true);
+      $supplier_name = get_post_meta($post->ID, $this->variable_prefix . "key_supplier_name", true);
+      $contract_amount = get_post_meta($post->ID, $this->variable_prefix . "key_contract_amount", true);
+
       ?>
       
       <div>
-        <h4><label class='required-field-label'>Philgeps Registration no:</label></h4>
-        <?php $title = get_post_meta($post->ID, $this->variable_prefix . "key_philgeps_registration_no", true) ?>
+        <h4><label class='required-field-label'>Philgeps Registration no:</label></h4>        
         <input
           class='bidding-opportunity-admin-input'
           type='text'
@@ -327,8 +342,7 @@ if (!class_exists('AdminPanel'))
       </div>
 
       <div>
-        <h4><label class='required-field-label'>Mode of Procurement:</label></h4>
-        <?php $mode = get_post_meta($post->ID, $this->variable_prefix . "key_mode", true); ?>        
+        <h4><label class='required-field-label'>Mode of Procurement:</label></h4>             
         <select
           id="conditional_render_trigger"
           class="bidding-opportunity-admin-input"
@@ -346,8 +360,7 @@ if (!class_exists('AdminPanel'))
       </div>
 
       <div>
-        <h4><label class='required-field-label'>Title:</label></h4>        
-        <?php $title = get_post_meta($post->ID, $this->variable_prefix . "key_title", true) ?>        
+        <h4><label class='required-field-label'>Title:</label></h4>                       
         <input
           class="bidding-opportunity-admin-input"
           type="text"
@@ -358,8 +371,7 @@ if (!class_exists('AdminPanel'))
         />
       </div>
       <div>
-        <h4><label class='required-field-label'>Approved Budget for the Contract:</label></h4>
-        <?php $abc = get_post_meta($post->ID, $this->variable_prefix . "key_abc", true) ?>
+        <h4><label class='required-field-label'>Approved Budget for the Contract:</label></h4>       
         <input
           class="bidding-opportunity-admin-input"
           type="number"
@@ -373,8 +385,7 @@ if (!class_exists('AdminPanel'))
 
       <div style="display: grid; grid-template-columns: 1fr 1fr;gap: 20px;">
         <div>
-          <h4><label class='required-field-label'>Publish Date:</label></h4>
-          <?php $publish_date = get_post_meta($post->ID, $this->variable_prefix . "key_publish_date", true) ?>
+          <h4><label class='required-field-label'>Publish Date:</label></h4>          
           <input
             class="bidding-opportunity-admin-input"
             type="date"
@@ -384,8 +395,7 @@ if (!class_exists('AdminPanel'))
           />
         </div>
         <div>
-          <h4><label class='required-field-label'>Closing Date:</label></h4>
-          <?php $closing_date = get_post_meta($post->ID, $this->variable_prefix . "key_closing_date", true) ?>
+          <h4><label class='required-field-label'>Closing Date:</label></h4>          
           <input
             class="bidding-opportunity-admin-input"
             type="date"
@@ -398,8 +408,7 @@ if (!class_exists('AdminPanel'))
 
       <div id='conditional_render_container' class='<?php echo $mode !== 'public' ? "hidden" : ""; ?>'>
         <div>
-          <h4><label>Prebid Date:</label></h4>
-          <?php $prebid_date = get_post_meta($post->ID, $this->variable_prefix . "key_prebid_date", true) ?>
+          <h4><label>Prebid Date:</label></h4>          
           <input
             class="bidding-opportunity-admin-input"
             type="date"
@@ -408,8 +417,7 @@ if (!class_exists('AdminPanel'))
           />
         </div>
         <div>
-          <h4><label>Supplemental Document:</label></h4>
-          <?php $supplemental = get_post_meta($post->ID, $this->variable_prefix . "key_supplemental_document", true) ?>
+          <h4><label>Supplemental Document:</label></h4>          
           <input
             class="bidding-opportunity-admin-input"
             type="text"
@@ -421,8 +429,7 @@ if (!class_exists('AdminPanel'))
       </div>
       
       <div>
-        <h4><label class='required-field-label'>Attachment:</label></h4>
-        <?php $bid_docs = get_post_meta($post->ID, $this->variable_prefix . "key_attachment", true) ?>
+        <h4><label class='required-field-label'>Attachment:</label></h4>        
         <input
           class="bidding-opportunity-admin-input"
           type="text"
@@ -472,8 +479,7 @@ if (!class_exists('AdminPanel'))
 
       <div id='awarded_conditional_render_container' class='<?php echo $selected_status_slug !== 'awarded' ? "hidden" : ""; ?>'>
         <div>
-          <h4><label>Supplier Name:</label></h4>
-          <?php $supplier_name = get_post_meta($post->ID, $this->variable_prefix . "key_supplier_name", true) ?>
+          <h4><label>Supplier Name:</label></h4>          
           <input
             class="bidding-opportunity-admin-input"
             type="text"
@@ -483,8 +489,7 @@ if (!class_exists('AdminPanel'))
           />
         </div>
         <div>
-          <h4><label>Contract Amount:</label></h4>
-          <?php $contract_amount = get_post_meta($post->ID, $this->variable_prefix . "key_contract_amount", true) ?>
+          <h4><label>Contract Amount:</label></h4>          
           <input
             class="bidding-opportunity-admin-input"
             type="number"
@@ -508,11 +513,20 @@ if (!class_exists('AdminPanel'))
       /* 
       * Save value of the fields to db
       */            
+      
+      // Check if this is an autosave or a revision to avoid unnecessary runs
+      if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) return;
+      if ( wp_is_post_revision( $post_id ) ) return;
+      
+      if ( isset($_GET['action']) && 'untrash' === $_GET['action']) return;
+      if(in_array($post->post_status, array('auto-draft', 'trash'))) return;
 
-      if(in_array($post->post_status, array('auto-draft', 'trash'))) {
-        return;
-      }
-
+      /*
+      * NONCE VERIFICATION        
+      */
+      if ( ! isset( $_POST[$this->variable_prefix . 'my_cpt_nonce'] ) ) die('no nonce');        
+      if ( ! wp_verify_nonce( $_POST[$this->variable_prefix . 'my_cpt_nonce'], $this->variable_prefix . 'my_cpt_save_action' ) ) return;
+      
       $philgeps = isset($_POST[$this->variable_prefix . 'philgeps_registration_no']) ? sanitize_text_field($_POST[$this->variable_prefix . 'philgeps_registration_no']) : "";
       $title = isset($_POST[$this->variable_prefix . 'title']) ? sanitize_text_field($_POST[$this->variable_prefix . 'title']) : "";
       $bo_abc = isset($_POST[$this->variable_prefix . 'abc']) ? sanitize_text_field($_POST[$this->variable_prefix . 'abc']) : "";
@@ -539,8 +553,8 @@ if (!class_exists('AdminPanel'))
       update_post_meta($post_id, $this->variable_prefix . "key_contract_amount", $contract_amount);
 
       //handle saving of status       
-      wp_set_object_terms( $post_id, $status_id, $this->taxonomy_status, false );            
-     
+      wp_set_object_terms( $post_id, $status_id, $this->taxonomy_status, false );             
+
     }
 
     public function syncCustomPostTitle( $post_id, $post, $update ) {
