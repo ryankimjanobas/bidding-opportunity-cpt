@@ -508,6 +508,11 @@ if (!class_exists('AdminPanel'))
       /* 
       * Save value of the fields to db
       */            
+
+      if(in_array($post->post_status, array('auto-draft', 'trash'))) {
+        return;
+      }
+
       $philgeps = isset($_POST[$this->variable_prefix . 'philgeps_registration_no']) ? sanitize_text_field($_POST[$this->variable_prefix . 'philgeps_registration_no']) : "";
       $title = isset($_POST[$this->variable_prefix . 'title']) ? sanitize_text_field($_POST[$this->variable_prefix . 'title']) : "";
       $bo_abc = isset($_POST[$this->variable_prefix . 'abc']) ? sanitize_text_field($_POST[$this->variable_prefix . 'abc']) : "";
