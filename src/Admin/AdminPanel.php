@@ -527,9 +527,9 @@ if (!class_exists('AdminPanel'))
       
       $philgeps = isset($_POST[$this->variable_prefix . 'philgeps_registration_no']) ? sanitize_text_field($_POST[$this->variable_prefix . 'philgeps_registration_no']) : "";
       $title = isset($_POST[$this->variable_prefix . 'title']) ? sanitize_text_field($_POST[$this->variable_prefix . 'title']) : "";
-      $bo_abc = isset($_POST[$this->variable_prefix . 'abc']) ? sanitize_text_field($_POST[$this->variable_prefix . 'abc']) : "";
-      $bo_publish_date = isset($_POST[$this->variable_prefix . 'publish_date']) ? sanitize_text_field($_POST[$this->variable_prefix . 'publish_date']) : "";
-      $bo_closing_date = isset($_POST[$this->variable_prefix . 'closing_date']) ? sanitize_text_field($_POST[$this->variable_prefix . 'closing_date']) : "";
+      $abc = isset($_POST[$this->variable_prefix . 'abc']) ? sanitize_text_field($_POST[$this->variable_prefix . 'abc']) : "";
+      $publish_date = isset($_POST[$this->variable_prefix . 'publish_date']) ? sanitize_text_field($_POST[$this->variable_prefix . 'publish_date']) : "";
+      $closing_date = isset($_POST[$this->variable_prefix . 'closing_date']) ? sanitize_text_field($_POST[$this->variable_prefix . 'closing_date']) : "";
       $attachment = isset($_POST[$this->variable_prefix . 'attachment']) ? sanitize_url($_POST[$this->variable_prefix . 'attachment']) : "";            
       $mode = isset($_POST[$this->variable_prefix . 'mode']) ? sanitize_text_field($_POST[$this->variable_prefix . 'mode']) : "";
       $prebid_date = isset($_POST[$this->variable_prefix . 'prebid_date']) ? sanitize_text_field($_POST[$this->variable_prefix . 'prebid_date']) : "";
@@ -540,9 +540,9 @@ if (!class_exists('AdminPanel'))
       
       update_post_meta($post_id, $this->variable_prefix . "key_philgeps_registration_no", $philgeps);
       update_post_meta($post_id, $this->variable_prefix . "key_title", $title);
-      update_post_meta($post_id, $this->variable_prefix . "key_abc", $bo_abc);
-      update_post_meta($post_id, $this->variable_prefix . "key_publish_date", $bo_publish_date);
-      update_post_meta($post_id, $this->variable_prefix . "key_closing_date", $bo_closing_date);
+      update_post_meta($post_id, $this->variable_prefix . "key_abc", $abc);
+      update_post_meta($post_id, $this->variable_prefix . "key_publish_date", $publish_date);
+      update_post_meta($post_id, $this->variable_prefix . "key_closing_date", $closing_date);
       update_post_meta($post_id, $this->variable_prefix . "key_attachment", $attachment);      
       update_post_meta($post_id, $this->variable_prefix . "key_mode", $mode);
       update_post_meta($post_id, $this->variable_prefix . "key_prebid_date", $prebid_date);
