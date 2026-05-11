@@ -92,7 +92,7 @@ if (!class_exists('AdminPanel'))
           array(
               'key'     => $this->variable_prefix . 'key_closing_date',
               'value'   => $current,
-              'compare' => '=',
+              'compare' => '<=',
               'type'    => 'DATE',
           ),
         ),
