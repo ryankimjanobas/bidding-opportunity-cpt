@@ -52,7 +52,12 @@ if (!class_exists('BaseController')) {
           'term'      => 'Awarded',
           'description' => 'Bidding awarded',
           'slug'        => 'awarded'
-        )
+        ),
+				array(
+          'term'      => 'Failed',
+          'description' => 'Bidding Failure',
+          'slug'        => 'failed'
+        ),
       );
 
 

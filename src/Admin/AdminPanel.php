@@ -24,9 +24,9 @@ if (!class_exists('AdminPanel'))
 
       add_action('init', array($this, 'registerCustomPostType'));
       
-      add_action('init', array($this, 'cptAddTaxonomyStatusses'));    
+      add_action('init', array($this, 'cptAddTaxonomyStatusses'));   
       
-      add_action('init', array($this, 'insertRequiredStatus'));
+      add_action( 'registered_taxonomy', array($this, 'insertRequiredStatus'), 10, 3 );
 
       add_action('init', array($this, 'autoUpdateBidsStatus'));      
 
@@ -49,21 +49,24 @@ if (!class_exists('AdminPanel'))
     /* 
     * Add required terms on status cpt
     */
-    public function insertRequiredStatus()
+    public function insertRequiredStatus( $taxonomy, $object_type, $arg )
     {                       
-      foreach ($this->required_status as $status) {
+      if ( $this->taxonomy_status === $taxonomy ) {
 
-        if( ! term_exists( $status['term'], $this->taxonomy_status )) {
-          wp_insert_term(
-            $status['term'],
-            $this->taxonomy_status,
-            array(
-              'description' => $status['description'],
-              'slug'        => $status['slug']
-            )
-          );    
-        }                
-      }
+        foreach ($this->required_status as $status) {
+
+          if( ! term_exists( $status['term'], $this->taxonomy_status )) {
+            wp_insert_term(
+              $status['term'],
+              $this->taxonomy_status,
+              array(
+                'description' => $status['description'],
+                'slug'        => $status['slug']
+              )
+            );    
+          }                
+        }
+      }    
     }
 
     /* 
@@ -82,7 +85,7 @@ if (!class_exists('AdminPanel'))
             array( 
                 'taxonomy' => $this->taxonomy_status,
                 'field'    => 'slug',
-                'terms'    => array( 'close', 'awarded' ),
+                'terms'    => array( 'close', 'awarded', 'failed' ),
                 'operator' => 'NOT IN',
             ),
         ),
