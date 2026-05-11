@@ -31,8 +31,6 @@ if (!class_exists('AdminPanel'))
       add_action('init', array($this, 'autoUpdateBidsStatus'));      
 
       add_action("save_post", array($this, 'cptSaveValues'), 10, 2);      
-
-      add_action('save_post', array($this, 'syncCustomPostTitle'), 10, 3 );
             
       add_filter( 'wp_insert_post_data', array($this, 'autoPublishPost'), 10, 2 );
 
@@ -560,36 +558,23 @@ if (!class_exists('AdminPanel'))
       //handle saving of status       
       wp_set_object_terms( $post_id, $status_id, $this->taxonomy_status, false );                   
 
-    }
-
-    public function syncCustomPostTitle( $post_id, $post, $update ) {
       
-        // Only run for our specific custom post type
-        if ( $this->cpt_name !== $post->post_type ) {
-            return;
-        }
+      //ensure post title is equal to this meta key title
+      if ( ! empty( $title ) && $post->post_title !== $title ) {        
 
-        // Check if this is an autosave or a revision to avoid unnecessary runs
-        if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) return;
-        if ( wp_is_post_revision( $post_id ) ) return;
+          // Unhook this function to prevent an infinite loop when updating
+          remove_action( 'save_post', array($this,'cptSaveValues') );
 
-        // Get the custom field value        
-        $custom_title = get_post_meta( $post_id, $this->variable_prefix . 'key_title', true );
-        
-        if ( ! empty( $custom_title ) && $post->post_title !== $custom_title ) {
-          
-            // Unhook this function to prevent an infinite loop when updating
-            remove_action( 'save_post', array($this,'syncCustomPostTitle') );
+          wp_update_post( array(
+              'ID'         => $post_id,
+              'post_title' => $title,
+              'post_name'  => sanitize_title( $title )
+          ) );
 
-            wp_update_post( array(
-                'ID'         => $post_id,
-                'post_title' => $custom_title,
-                'post_name'  => sanitize_title( $custom_title ) // Also updates the URL slug
-            ) );
+          // Re-hook the function
+          add_action( 'save_post', array($this, 'cptSaveValues'), 10, 2 );
+      }
 
-            // Re-hook the function
-            add_action( 'save_post', array($this, 'syncCustomPostTitle'), 10, 3 );
-        }
     }
 
     public function cptCustomTableColumns($columns)
