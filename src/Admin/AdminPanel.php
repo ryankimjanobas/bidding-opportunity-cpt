@@ -305,7 +305,7 @@ if (!class_exists('AdminPanel'))
       wp_nonce_field( $this->variable_prefix . 'my_cpt_save_action', $this->variable_prefix . 'my_cpt_nonce' );
 
       //get field values
-      $title = get_post_meta($post->ID, $this->variable_prefix . "key_philgeps_registration_no", true);
+      $philgeps_reg_no = get_post_meta($post->ID, $this->variable_prefix . "key_philgeps_registration_no", true);
       $mode = get_post_meta($post->ID, $this->variable_prefix . "key_mode", true);
       $title = get_post_meta($post->ID, $this->variable_prefix . "key_title", true);
       $abc = get_post_meta($post->ID, $this->variable_prefix . "key_abc", true);
@@ -324,7 +324,7 @@ if (!class_exists('AdminPanel'))
         <input
           class='bidding-opportunity-admin-input'
           type='text'
-          value='<?php echo $title; ?>'
+          value='<?php echo $philgeps_reg_no; ?>'
           name='<?php echo $this->variable_prefix; ?>philgeps_registration_no'
           placeholder="Philgep's registration number" required
         />
@@ -492,29 +492,45 @@ if (!class_exists('AdminPanel'))
       </div>
 
       <div style="padding:30px 0;">
-        <?= submit_button('Save'); ?>
+        <?php echo submit_button('Save'); ?>
       </div>
       <?php        
     }
-
+    /* 
+    * Save values of metabox fields to db
+    */         
     public function cptSaveValues($post_id, $post)
-    {
-      /* 
-      * Save value of the fields to db
-      */            
-      
-      // Check if this is an autosave or a revision to avoid unnecessary runs
-      if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) return;
-      if ( wp_is_post_revision( $post_id ) ) return;
-      
-      if ( isset($_GET['action']) && 'untrash' === $_GET['action']) return;
-      if(in_array($post->post_status, array('auto-draft', 'trash'))) return;
-
+    {        
       /*
-      * NONCE VERIFICATION        
+      * NONCE check and verification        
       */
-      if ( ! isset( $_POST[$this->variable_prefix . 'my_cpt_nonce'] ) ) die('no nonce');        
-      if ( ! wp_verify_nonce( $_POST[$this->variable_prefix . 'my_cpt_nonce'], $this->variable_prefix . 'my_cpt_save_action' ) ) return;
+      //check if nonce is set and return if not
+      if ( ! isset( $_POST[$this->variable_prefix . 'my_cpt_nonce'] ) ) {
+        return;
+      }
+      //verify nonce
+      if ( ! wp_verify_nonce( $_POST[$this->variable_prefix . 'my_cpt_nonce'], $this->variable_prefix . 'my_cpt_save_action' ) ) {
+        return;
+      }
+       
+      /*
+      * Check if this is an autosave or a revision       
+      */      
+      if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+        return;
+      }        
+      if ( wp_is_post_revision( $post_id ) ) {
+        return;
+      }
+
+      //return if action is untrash/restore from trash
+      if ( isset($_GET['action']) && $_GET['action'] === 'untrash' ) {
+        return;
+      }
+      //return if post status is auto-draft or trash
+      if(in_array($post->post_status, array('auto-draft', 'trash'))) {
+        return;
+      }              
       
       $philgeps = isset($_POST[$this->variable_prefix . 'philgeps_registration_no']) ? sanitize_text_field($_POST[$this->variable_prefix . 'philgeps_registration_no']) : "";
       $title = isset($_POST[$this->variable_prefix . 'title']) ? sanitize_text_field($_POST[$this->variable_prefix . 'title']) : "";
@@ -527,7 +543,7 @@ if (!class_exists('AdminPanel'))
       $supplemental_document = isset($_POST[$this->variable_prefix . 'supplemental_document']) ? sanitize_text_field($_POST[$this->variable_prefix . 'supplemental_document']) : "";
       $status_id = isset($_POST[$this->taxonomy_status]) ? intval(sanitize_text_field($_POST[$this->taxonomy_status])) : "";
       $supplier_name = isset($_POST[$this->variable_prefix . 'supplier_name']) ? sanitize_text_field($_POST[$this->variable_prefix . 'supplier_name']) : "";
-      $contract_amount = isset($_POST[$this->variable_prefix . 'contract_amount']) ? sanitize_text_field($_POST[$this->variable_prefix . 'contract_amount']) : "";  
+      $contract_amount = isset($_POST[$this->variable_prefix . 'contract_amount']) ? sanitize_text_field($_POST[$this->variable_prefix . 'contract_amount']) : "";       
       
       update_post_meta($post_id, $this->variable_prefix . "key_philgeps_registration_no", $philgeps);
       update_post_meta($post_id, $this->variable_prefix . "key_title", $title);
@@ -542,7 +558,7 @@ if (!class_exists('AdminPanel'))
       update_post_meta($post_id, $this->variable_prefix . "key_contract_amount", $contract_amount);
 
       //handle saving of status       
-      wp_set_object_terms( $post_id, $status_id, $this->taxonomy_status, false );             
+      wp_set_object_terms( $post_id, $status_id, $this->taxonomy_status, false );                   
 
     }
 
