@@ -48,11 +48,11 @@ if (!class_exists('AdminPanel'))
       
     }        
 
+    /* 
+    * Add required terms on status cpt
+    */
     public function insertRequiredStatus()
-    {
-      /* 
-      * Add required terms on status cpt
-      */                 
+    {                       
       foreach ($this->required_status as $status) {
 
         if( ! term_exists( $status['term'], $this->taxonomy_status )) {
@@ -67,13 +67,12 @@ if (!class_exists('AdminPanel'))
         }                
       }
     }
-    
-    public function autoUpdateBidsStatus()
-    {
-      /* 
-      * Automatically set post status to close if closing date and current date is the same 
-      */           
 
+    /* 
+    * Automatically set bid status to close if closing date and current date is the same 
+    */ 
+    public function autoUpdateBidsStatus()
+    {               
       $tz = new \DateTimeZone('Asia/Manila');
       $date = new \DateTime('now', $tz);      
       $current = $date->format('Y-m-d'); 
@@ -138,13 +137,12 @@ if (!class_exists('AdminPanel'))
       return $data;
 
     }    
-
+    
+    /* 
+    * Register a custom post type names bid_opportunity 
+    */
     public function registerCustomPostType()
-    {
-      /* 
-      * Register a custom post type names bid_opportunity 
-      */
-
+    {      
       $labels = array(
         'name' => __('Bid Opportunities'),
         'singular_name' => __('Bid Opportunity'),
@@ -183,12 +181,11 @@ if (!class_exists('AdminPanel'))
       register_post_type($this->cpt_name, $args);
     }    
 
+    /* 
+    * Register a taxonomy statuses to custom post type 
+    */
     public function cptAddTaxonomyStatusses()
-    {
-      /* 
-      * Register a taxonomy statuses to custom post type 
-      */
-
+    {      
       register_taxonomy(
         $this->taxonomy_status,
         $this->cpt_name,
@@ -209,11 +206,11 @@ if (!class_exists('AdminPanel'))
         )
       );
     }
-    
+    /* 
+    * Register inline style and scripts
+    */
     public function customAdminStylesScripts() {
-      /* 
-      * Register inline style and scripts
-      */
+      
       global $typenow;
       //only add to head if type is equal to this cpt
       if($typenow === $this->cpt_name) {
@@ -283,23 +280,21 @@ if (!class_exists('AdminPanel'))
       <?php
       }    
     }    
-
+    /* 
+    * Register the metabox 
+    */
     public function cptRegisterMetabox()
-    {
-      /* 
-      * Register the metabox 
-      */
+    {      
       add_meta_box("cpt-id", "Bidding Details", array($this, 'cptMetaBoxLayout'), $this->cpt_name);
       //remove publish metabox
       remove_meta_box( 'submitdiv', $this->cpt_name, 'side' );
     }
 
+    /* 
+    * metabox layout
+    */        
     public function cptMetaBoxLayout($post)
-    {
-      /* 
-      * metabox layout
-      */                         
-      
+    {                             
       wp_nonce_field( $this->variable_prefix . 'my_cpt_save_action', $this->variable_prefix . 'my_cpt_nonce' );
 
       //get field values
@@ -577,12 +572,11 @@ if (!class_exists('AdminPanel'))
 
     }
 
+    /* 
+    * Display custom columns on admin panel listing of bidding opportunities 
+    */
     public function cptCustomTableColumns($columns)
-    {
-      /* 
-      * Display custom columns on admin panel listing of bidding opportunities 
-      */
-
+    {      
       $columns = array(
         "cb" => "<input type='checkbox'/>",
         "bo_title" => "Title",
@@ -598,12 +592,11 @@ if (!class_exists('AdminPanel'))
       return $columns;
     }
 
+    /* 
+    * Make custom columns sortable on admin panel 
+    */
     public function cptCustomSortableColumns($columns)
-    {
-      /* 
-      * Make custom columns sortable on admin panel 
-      */
-      
+    {            
       $columns['bo_title'] = "title";
       $columns['bo_abc'] = "abc";
       $columns['bo_closing_date'] = "closing-date";
@@ -613,13 +606,12 @@ if (!class_exists('AdminPanel'))
 
       return $columns;
     }
-            
-    public function statusFilterBox()
-    {
-      /* 
-      * Add filter by status on admin panel 
-      */
 
+    /* 
+    * Add filter by status on admin panel 
+    */
+    public function statusFilterBox()
+    {      
       global $typenow;
 
       if ($this->cpt_name !== $typenow) {
@@ -639,12 +631,11 @@ if (!class_exists('AdminPanel'))
 
     }
 
+    /* 
+    * Parse query on status filter in admin panel 
+    */
     public function parseStatusFilterBox($query)
-    {
-      /* 
-      * Parse query on status filter in admin panel 
-      */
-      
+    {            
       global $typenow;
       global $pagenow;
 
@@ -660,12 +651,11 @@ if (!class_exists('AdminPanel'))
       }
     }    
 
+    /* 
+    * Display data of custom table columns on admin panel
+    */
     public function cptCustomTableColumnsData($column, $post_id)
-    {
-      /* 
-      * Display data of custom table columns on admin panel
-      */
-
+    {     
       switch ($column) {
 
         case "bo_title":
