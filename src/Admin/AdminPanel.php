@@ -28,9 +28,7 @@ if (!class_exists('AdminPanel'))
       
       add_action('init', array($this, 'insertRequiredStatus'));
 
-      add_action('init', array($this, 'autoUpdateBidsStatus'));
-
-      add_action("add_meta_boxes", array($this, 'cptRegisterMetabox'));
+      add_action('init', array($this, 'autoUpdateBidsStatus'));      
 
       add_action("save_post", array($this, 'cptSaveValues'), 10, 2);      
 
@@ -180,7 +178,8 @@ if (!class_exists('AdminPanel'))
         'hierarchical' => false,
         'menu_position' => 6,
         'menu_icon' => 'dashicons-image-filter',
-        'supports' => array('')
+        'supports' => array(''),
+        'register_meta_box_cb' => array($this, 'cptRegisterMetabox')
       );
 
       register_post_type($this->cpt_name, $args);
@@ -292,7 +291,6 @@ if (!class_exists('AdminPanel'))
       /* 
       * Register the metabox 
       */
-
       add_meta_box("cpt-id", "Bidding Details", array($this, 'cptMetaBoxLayout'), $this->cpt_name);
       //remove publish metabox
       remove_meta_box( 'submitdiv', $this->cpt_name, 'side' );
