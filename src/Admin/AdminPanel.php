@@ -30,9 +30,7 @@ if (!class_exists('AdminPanel'))
 
       add_action('init', array($this, 'autoUpdateBidsStatus'));      
 
-      add_action("save_post", array($this, 'cptSaveValues'), 10, 2);      
-            
-      add_filter( 'wp_insert_post_data', array($this, 'autoPublishPost'), 10, 2 );
+      add_action("save_post", array($this, 'cptSaveValues'), 10, 2);                        
 
       add_action('manage_' . $this->cpt_name . '_posts_columns', array($this, 'cptCustomTableColumns'));
 
@@ -123,19 +121,6 @@ if (!class_exists('AdminPanel'))
 
       }
       
-    }
-
-    public function autoPublishPost( $data, $postarr )
-    {                       
-      if ( $data['post_type'] === $this->cpt_name && $data['post_status'] != 'trash' && $data['post_status'] != 'auto-draft' ) {
-
-        //todo validate post data
-
-        $data['post_status'] = 'publish';
-        
-      }        
-      return $data;
-
     }    
     
     /* 
@@ -533,8 +518,7 @@ if (!class_exists('AdminPanel'))
       $attachment = isset($_POST[$this->variable_prefix . 'attachment']) ? sanitize_url($_POST[$this->variable_prefix . 'attachment']) : "";            
       $mode = isset($_POST[$this->variable_prefix . 'mode']) ? sanitize_text_field($_POST[$this->variable_prefix . 'mode']) : "";
       $prebid_date = isset($_POST[$this->variable_prefix . 'prebid_date']) ? sanitize_text_field($_POST[$this->variable_prefix . 'prebid_date']) : "";
-      $supplemental_document = isset($_POST[$this->variable_prefix . 'supplemental_document']) ? sanitize_text_field($_POST[$this->variable_prefix . 'supplemental_document']) : "";
-      $status_id = isset($_POST[$this->taxonomy_status]) ? intval(sanitize_text_field($_POST[$this->taxonomy_status])) : "";
+      $supplemental_document = isset($_POST[$this->variable_prefix . 'supplemental_document']) ? sanitize_text_field($_POST[$this->variable_prefix . 'supplemental_document']) : "";      
       $supplier_name = isset($_POST[$this->variable_prefix . 'supplier_name']) ? sanitize_text_field($_POST[$this->variable_prefix . 'supplier_name']) : "";
       $contract_amount = isset($_POST[$this->variable_prefix . 'contract_amount']) ? sanitize_text_field($_POST[$this->variable_prefix . 'contract_amount']) : "";       
       
@@ -551,6 +535,7 @@ if (!class_exists('AdminPanel'))
       update_post_meta($post_id, $this->variable_prefix . "key_contract_amount", $contract_amount);
 
       //handle saving of status       
+      $status_id = isset($_POST[$this->taxonomy_status]) ? intval(sanitize_text_field($_POST[$this->taxonomy_status])) : "";
       wp_set_object_terms( $post_id, $status_id, $this->taxonomy_status, false );                   
 
       
@@ -563,7 +548,8 @@ if (!class_exists('AdminPanel'))
           wp_update_post( array(
               'ID'         => $post_id,
               'post_title' => $title,
-              'post_name'  => sanitize_title( $title )
+              'post_name'  => sanitize_title( $title ),
+              'post_status' => 'publish'
           ) );
 
           // Re-hook the function
