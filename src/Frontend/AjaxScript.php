@@ -151,7 +151,7 @@ if (!class_exists('AjaxScript')) {
                 </a>";
 
           array_push($data, [            
-            'counter'         => $counter++,
+            'counter'         => $counter++ + $offset,
             'title'           => $title,
             'abc'             => $abc,
             'publish_date'    => $publish_date,
