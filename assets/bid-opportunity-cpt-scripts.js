@@ -46,6 +46,7 @@ jQuery(document).ready(function($) {
         className: 'text-center'
       }
     ],
+    order: [[0, 'DESC']],
   });
 
   //initialize the datatable for shortcode intended for transparency public bidding
@@ -84,6 +85,7 @@ jQuery(document).ready(function($) {
         className: 'text-center'
       }
     ],
+    order: [[0, 'DESC']],
   });
 
   /* 
@@ -112,7 +114,7 @@ jQuery(document).ready(function($) {
         { data: 'closing_date' },       
         { data: 'attachment' },
         { data: 'status' }
-    ],
+    ],    
     columnDefs: [
       {
         orderable: false,
@@ -123,6 +125,7 @@ jQuery(document).ready(function($) {
         className: 'text-center'
       }
     ],
+    order: [[0, 'DESC']],
   });
 
   //initialize the datatable for shortcode intended for transparency of alternative method of procurement
@@ -159,6 +162,7 @@ jQuery(document).ready(function($) {
         className: 'text-center'
       }
     ],
+    order: [[0, 'DESC']],
   });
 
 });

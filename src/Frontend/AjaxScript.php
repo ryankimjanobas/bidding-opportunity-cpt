@@ -32,7 +32,7 @@ if (!class_exists('AjaxScript')) {
       $request = $_GET;
       $posts_per_page = $request['length'];
       $offset = $request['start'];
-      $orderBy = $request['order'][0]['column'] ? $request['order'][0]['column'] : 0;
+      $orderBy = $request['order'][0]['column'];
       $orderDir = $request['order'][0]['dir'];
       $search = $request['search']['value'];
       $page_identifier = $request['identifier'];
@@ -44,7 +44,7 @@ if (!class_exists('AjaxScript')) {
         4 => 'order_by_closing_date',
         0 => 'modified' //default order by last modified
       );
-
+      
       $meta_query_value = 'public';
       $tax_query = array();
 
