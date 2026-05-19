@@ -36,7 +36,7 @@ function deactivate_bidding_opportunity_plugin() {
 register_deactivation_hook( __FILE__, 'deactivate_bidding_opportunity_plugin' );
 
 /**
- * The code that initialize classes neede on the plugin
+ * The code that initialize classes needed for the plugin to work
  */
 if ( class_exists( 'App\\Init' ) ) {
   App\Init::registerServices();

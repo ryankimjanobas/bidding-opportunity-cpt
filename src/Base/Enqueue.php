@@ -3,7 +3,7 @@
 /**
  * @package  BiddingOpportunityPlugin
  * 
- * This class handles all scripts to enqueue
+ * This class handles all scripts and libraries used on frontend
  */
 
 namespace App\Base;

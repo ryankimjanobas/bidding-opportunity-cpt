@@ -3,7 +3,7 @@
 /**
  * @package  BiddingOpportunityPlugin
  * 
- * All codes related to display datatable in public bidding page
+ * All codes handling the request of datatables on frontend
  */
 
 namespace App\Frontend;
