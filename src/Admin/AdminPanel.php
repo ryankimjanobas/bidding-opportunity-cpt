@@ -400,25 +400,30 @@ if (!class_exists('AdminPanel'))
           <input type="hidden" name="<?php echo $this->variable_prefix; ?>supplemental_documents" value='<?php echo $supplemental_documents; ?>'>          
           <h4><label>Supplemental Document(s):</label></h4>
           <p>
-            <div id="each_supplemental_documents_container">
-            <?php
-
-              $supplemental_documents_json = json_decode($supplemental_documents);
-              
-              foreach ($supplemental_documents_json as $doc) {                
-
-            ?>
-
-              <span class='badge each-supplemental-document-badge'>
-                <a href='<?php echo $doc->document_link; ?>' target='_blank' class='supplemental-document-links'>
-                  <?php echo $doc->document_name; ?>
-                </a>
-                <span class='supplemental-action-delete' data-document_title='<?php echo $doc->document_name; ?>'>
-                  <span class='dashicons dashicons-no' title='Delete'></span>
-                </span>
-              </span>
             
+            <div id="each_supplemental_documents_container">
+
             <?php
+
+              $supplemental_documents_json = $supplemental_documents ? json_decode($supplemental_documents, true) : [];
+
+              if(!empty($supplemental_documents_json)) {
+              
+                foreach ($supplemental_documents_json as $doc) {                
+
+                ?>
+
+                  <span class='badge each-supplemental-document-badge'>
+                    <a href='<?php echo $doc['document_link']; ?>' target='_blank' class='supplemental-document-links'>
+                      <?php echo $doc['document_name']; ?>
+                    </a>
+                    <span class='supplemental-action-delete' data-document_title='<?php echo $doc['document_name']; ?>'>
+                      <span class='dashicons dashicons-no' title='Delete'></span>
+                    </span>
+                  </span>
+                
+                <?php
+                }
               }
             ?>            
 
