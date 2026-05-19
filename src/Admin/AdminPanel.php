@@ -40,9 +40,7 @@ if (!class_exists('AdminPanel'))
 
       add_action("restrict_manage_posts", array($this, 'statusFilterBox'));
 
-      add_action("parse_query", array($this, 'parseStatusFilterBox'));
-
-      add_action('admin_head', array($this,'customAdminStylesScripts'));
+      add_action("parse_query", array($this, 'parseStatusFilterBox'));      
       
       add_action('admin_enqueue_scripts', array($this,'customAdminScripts'));
       
@@ -196,88 +194,14 @@ if (!class_exists('AdminPanel'))
         )
       );
     }
-
+    /* 
+    * Register admin styles and scripts
+    */
     public function customAdminScripts()
     {
-      global $typenow;
-
-      if($typenow === $this->cpt_name) {
-        wp_enqueue_script($this->cpt_name . '_scripts', "$this->plugin_url/assets/bid-opportunity-cpt-admin-scripts.js", array('jquery'), '1.0.0', true);
-      }
-    }
-    /* 
-    * Register inline style and scripts
-    */
-    public function customAdminStylesScripts() {
-      
-      global $typenow;
-      //only add to head if type is equal to this cpt
-      if($typenow === $this->cpt_name) {
-        ?>
-          <style>            
-              .bidding-opportunity-admin-input {              
-                width: 100%;
-              }
-              .required-field-label::after {
-                content: " *";
-                color: red;
-                font-weight: bold;
-              }
-              .hidden {
-                display: none;
-              }
-              .bid-opportunity-status-active {
-                color: #5498f1
-              }
-              .bid-opportunity-status-close {
-                color: #df6e12
-              }
-              .bid-opportunity-status-awarded {
-                color: #14b336
-              }
-              .bid-opportunity-status-default {
-                color: #50575e
-              }
-              .bidding-opportunity-supplemental-container
-              .bid-opportunity-required-field-border {
-                border: 1px solid #c21c1c;
-              }
-              #each_supplemental_documents_container
-              .badge {
-                background-color: #5498f1;
-                color: white;
-                padding: 4px 6px;
-                text-align: center;
-                border-radius: 5px;
-                margin: 5px 3px;
-              }
-              #each_supplemental_documents_container
-              .supplemental-action-delete:hover{
-                color: #c21c1c;
-                cursor: pointer;
-              }
-               #each_supplemental_documents_container
-              .supplemental-action-button:hover{                
-                cursor: pointer;
-              }
-              #each_supplemental_documents_container
-              .supplemental-document-links {
-                text-decoration: none;
-                color: white;
-              }
-              #each_supplemental_documents_container
-              .supplemental-document-links:hover {                
-                text-decoration: underline;
-              }
-              .bidding-opportunity-supplemental-container
-              #bidding-opportunity-supplemental-warning {
-                color: red;
-              }
-          </style>        
-
-      <?php
-      }    
-    }    
+      wp_enqueue_script($this->cpt_name . '_scripts', "$this->plugin_url/assets/bid-opportunity-cpt-admin-scripts.js", array('jquery'), '1.0.0', true);
+      wp_enqueue_style($this->cpt_name . '_styles', "$this->plugin_url/assets/bid-opportunity-cpt-admin-styles.css");
+    }     
     /* 
     * Register the metabox 
     */

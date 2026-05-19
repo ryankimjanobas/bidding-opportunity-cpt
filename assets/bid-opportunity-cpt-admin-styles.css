@@ -1,0 +1,64 @@
+
+/**
+ * @package  BiddingOpportunityPlugin
+ * 
+ */
+
+.bidding-opportunity-admin-input {              
+  width: 100%;
+}
+.required-field-label::after {
+  content: " *";
+  color: red;
+  font-weight: bold;
+}
+.hidden {
+  display: none;
+}
+.bid-opportunity-status-active {
+  color: #5498f1
+}
+.bid-opportunity-status-close {
+  color: #df6e12
+}
+.bid-opportunity-status-awarded {
+  color: #14b336
+}
+.bid-opportunity-status-default {
+  color: #50575e
+}
+.bidding-opportunity-supplemental-container
+.bid-opportunity-required-field-border {
+  border: 1px solid #c21c1c;
+}
+#each_supplemental_documents_container
+.badge {
+  background-color: #5498f1;
+  color: white;
+  padding: 4px 6px;
+  text-align: center;
+  border-radius: 5px;
+  margin: 5px 3px;
+}
+#each_supplemental_documents_container
+.supplemental-action-delete:hover{
+  color: #c21c1c;
+  cursor: pointer;
+}
+  #each_supplemental_documents_container
+.supplemental-action-button:hover{                
+  cursor: pointer;
+}
+#each_supplemental_documents_container
+.supplemental-document-links {
+  text-decoration: none;
+  color: white;
+}
+#each_supplemental_documents_container
+.supplemental-document-links:hover {                
+  text-decoration: underline;
+}
+.bidding-opportunity-supplemental-container
+#bidding-opportunity-supplemental-warning {
+  color: red;
+}
