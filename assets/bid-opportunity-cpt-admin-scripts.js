@@ -70,28 +70,38 @@ jQuery(document).ready(function($) {
 
     });
 
-    if(!error) {
+    if(!error) {      
+      
+      const supplemental_document_name = $("#supplemental_documents_document_name");
+      const supplemental_document_link = $("#supplemental_documents_document_link");
+      const each_supplemental_container = $("#each_supplemental_documents_container");
+      const current_supplemental_documents_input = $(".bidding-opportunity-supplemental-container").find('input[name="bid_opportunity_cpt_supplemental_documents"]');
+      const current_supplemental_documents_in_array = current_supplemental_documents_input.val() ? JSON.parse(current_supplemental_documents_input.val()) : [];
+
+      console.log(current_supplemental_documents_in_array);
       //validate document link if url or not
-      const supplemental_link = $("#supplemental_documents_document_link");
+      if(!isValidURL(supplemental_document_link.val())) {    
 
-      if(!isValidURL(supplemental_link.val())) {    
-
-        supplemental_link.addClass("bid-opportunity-required-field-border");
+        supplemental_document_link.addClass("bid-opportunity-required-field-border");
         $("#bidding-opportunity-supplemental-warning").html('Please input a valid url.');
 
       } else {
-
-        //add the supplemental item if no error
-        const supplemental_document_name = $("#supplemental_documents_document_name");
-        const supplemental_document_link = $("#supplemental_documents_document_link");
-        const each_supplemental_container = $("#each_supplemental_documents_container");
-
-        supplemental_link.removeClass("bid-opportunity-required-field-border");
+        
+        let newArray = [];
+        //add the supplemental item if no error       
+        supplemental_document_link.removeClass("bid-opportunity-required-field-border");
         $("#bidding-opportunity-supplemental-warning").html('');
 
         each_supplemental_container.append("<span class='badge each-supplemental-document-badge'><a href='" + supplemental_document_link.val()
         + "' target='_blank' class='supplemental-document-links'> &nbsp;" + supplemental_document_name.val()
-        + "</a> <span class='supplemental-action-delete'><span class='dashicons dashicons-no' title='Delete'></span></span></span>");     
+        + "</a> <span class='supplemental-action-delete' data-document_title='" + supplemental_document_name.val() + "'>"
+        + "<span class='dashicons dashicons-no' title='Delete'></span></span></span>");  
+
+        //set input value        
+        newArray = [...current_supplemental_documents_in_array, {document_name: supplemental_document_name.val(), document_link: supplemental_document_link.val()}];
+
+        current_supplemental_documents_input.val(JSON.stringify(newArray));    
+
         //reset input values
         supplemental_document_name.val('');
         supplemental_document_link.val('');
@@ -105,8 +115,24 @@ jQuery(document).ready(function($) {
 
     e.preventDefault();
 
+    const el = $(this);    
+
     if (confirm("Are you sure you want to delete this?")) {
-        $(this).closest('.each-supplemental-document-badge').remove();
+
+      const current_supplemental_documents_input = $(".bidding-opportunity-supplemental-container").find('input[name="bid_opportunity_cpt_supplemental_documents"]');
+      const current_supplemental_documents_in_array = current_supplemental_documents_input.val() ? JSON.parse(current_supplemental_documents_input.val()) : [];
+      const this_document_title = el.data('document_title');
+      
+      //filter array, exclude the document clicked
+      const filteredArray = current_supplemental_documents_in_array.filter(item => (
+        item.document_name !== this_document_title
+      ));
+
+      //update input value
+      current_supplemental_documents_input.val(JSON.stringify(filteredArray));
+      //remove the current supplemental ducoment
+      $(this).closest('.each-supplemental-document-badge').remove();
+
     }
     
   });

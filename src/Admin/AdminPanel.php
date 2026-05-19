@@ -246,7 +246,7 @@ if (!class_exists('AdminPanel'))
               .badge {
                 background-color: #5498f1;
                 color: white;
-                padding: 4px 10px;
+                padding: 4px 6px;
                 text-align: center;
                 border-radius: 5px;
                 margin: 5px 3px;
@@ -303,11 +303,11 @@ if (!class_exists('AdminPanel'))
       $publish_date = get_post_meta($post->ID, $this->variable_prefix . "key_publish_date", true);
       $closing_date = get_post_meta($post->ID, $this->variable_prefix . "key_closing_date", true);
       $prebid_date = get_post_meta($post->ID, $this->variable_prefix . "key_prebid_date", true);
-      $supplemental = get_post_meta($post->ID, $this->variable_prefix . "key_supplemental_document", true);
+      $supplemental_documents = get_post_meta($post->ID, $this->variable_prefix . "key_supplemental_document", true);
       $bid_docs = get_post_meta($post->ID, $this->variable_prefix . "key_attachment", true);
       $supplier_name = get_post_meta($post->ID, $this->variable_prefix . "key_supplier_name", true);
       $contract_amount = get_post_meta($post->ID, $this->variable_prefix . "key_contract_amount", true);
-
+      
       ?>
       
       <div>
@@ -396,19 +396,41 @@ if (!class_exists('AdminPanel'))
             name="<?php echo $this->variable_prefix; ?>prebid_date"
           />
         </div>
-        <div class="bidding-opportunity-supplemental-container" style="border:1px solid rgba(0,0,0,0.3);margin:10px 0;padding: 10px;border-radius:5px;">
-          <p><span id="bidding-opportunity-supplemental-warning"></span></P>
+        <div class="bidding-opportunity-supplemental-container" style="border:1px solid rgba(0,0,0,0.3);margin:10px 0;padding: 10px;border-radius:5px;">          
+          <input type="hidden" name="<?php echo $this->variable_prefix; ?>supplemental_documents" value='<?php echo $supplemental_documents; ?>'>          
           <h4><label>Supplemental Document(s):</label></h4>
           <p>
-            <div id="each_supplemental_documents_container"></div>      
+            <div id="each_supplemental_documents_container">
+            <?php
+
+              $supplemental_documents_json = json_decode($supplemental_documents);
+              
+              foreach ($supplemental_documents_json as $doc) {                
+
+            ?>
+
+              <span class='badge each-supplemental-document-badge'>
+                <a href='<?php echo $doc->document_link; ?>' target='_blank' class='supplemental-document-links'>
+                  <?php echo $doc->document_name; ?>
+                </a>
+                <span class='supplemental-action-delete' data-document_title='<?php echo $doc->document_name; ?>'>
+                  <span class='dashicons dashicons-no' title='Delete'></span>
+                </span>
+              </span>
+            
+            <?php
+              }
+            ?>            
+
+            </div>      
           </p>          
+          <p><span id="bidding-opportunity-supplemental-warning"></span></P>
           <div style="display: grid; grid-template-columns: 8fr 8fr 1fr;gap: 10px;">            
             <div>                   
               <input
                 class="bidding-opportunity-admin-input"
                 type="text"
-                value="<?php echo $supplemental; ?>"
-                name="<?php echo $this->variable_prefix; ?>supplemental_document"
+                value=""                
                 placeholder="Document Title"
                 id="supplemental_documents_document_name"
               />
@@ -417,8 +439,7 @@ if (!class_exists('AdminPanel'))
               <input
                 class="bidding-opportunity-admin-input"
                 type="text"
-                value="<?php echo $supplemental; ?>"
-                name="<?php echo $this->variable_prefix; ?>supplemental_document"
+                value=""                
                 placeholder="Link of Document"
                 id="supplemental_documents_document_link"
               />
@@ -427,18 +448,7 @@ if (!class_exists('AdminPanel'))
               <button class="supplemental-action-button" id="bid_opportunity_supplemental_documents_add">Add</button>
             </div>  
           </div>
-        </div>
-        
-        <!-- <div>
-          <h4><label>Supplemental Document:</label></h4>          
-          <input
-            class="bidding-opportunity-admin-input"
-            type="text"
-            value="<?php echo $supplemental; ?>"
-            name="<?php echo $this->variable_prefix; ?>supplemental_document[]"
-            placeholder="Supplemental Document"
-          />
-        </div> --> 
+        </div>                
       </div>
       
       <div>
@@ -564,7 +574,7 @@ if (!class_exists('AdminPanel'))
       $attachment = isset($_POST[$this->variable_prefix . 'attachment']) ? sanitize_url($_POST[$this->variable_prefix . 'attachment']) : "";            
       $mode = isset($_POST[$this->variable_prefix . 'mode']) ? sanitize_text_field($_POST[$this->variable_prefix . 'mode']) : "";
       $prebid_date = isset($_POST[$this->variable_prefix . 'prebid_date']) ? sanitize_text_field($_POST[$this->variable_prefix . 'prebid_date']) : "";
-      $supplemental_document = isset($_POST[$this->variable_prefix . 'supplemental_document']) ? sanitize_text_field($_POST[$this->variable_prefix . 'supplemental_document']) : "";      
+      $supplemental_documents = isset($_POST[$this->variable_prefix . 'supplemental_documents']) ? sanitize_text_field($_POST[$this->variable_prefix . 'supplemental_documents']) : "";      
       $supplier_name = isset($_POST[$this->variable_prefix . 'supplier_name']) ? sanitize_text_field($_POST[$this->variable_prefix . 'supplier_name']) : "";
       $contract_amount = isset($_POST[$this->variable_prefix . 'contract_amount']) ? sanitize_text_field($_POST[$this->variable_prefix . 'contract_amount']) : "";       
       
@@ -576,7 +586,7 @@ if (!class_exists('AdminPanel'))
       update_post_meta($post_id, $this->variable_prefix . "key_attachment", $attachment);      
       update_post_meta($post_id, $this->variable_prefix . "key_mode", $mode);
       update_post_meta($post_id, $this->variable_prefix . "key_prebid_date", $prebid_date);
-      update_post_meta($post_id, $this->variable_prefix . "key_supplemental_document", $supplemental_document);
+      update_post_meta($post_id, $this->variable_prefix . "key_supplemental_document", $supplemental_documents);
       update_post_meta($post_id, $this->variable_prefix . "key_supplier_name", $supplier_name);
       update_post_meta($post_id, $this->variable_prefix . "key_contract_amount", $contract_amount);
 
