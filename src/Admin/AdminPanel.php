@@ -671,6 +671,7 @@ if (!class_exists('AdminPanel'))
 
             //get supplemental documents if mode is public bidding
             if($mode === 'public') {
+              
               $documents = get_post_meta($post_id, $this->variable_prefix . "key_supplemental_documents", true);
               $documents_array = $documents ? json_decode($documents, true) : '';
 
