@@ -42,7 +42,9 @@ if (!class_exists('AdminPanel'))
 
       add_action("parse_query", array($this, 'parseStatusFilterBox'));
 
-      add_action('admin_head', array($this,'customAdminStylesScripts'));      
+      add_action('admin_head', array($this,'customAdminStylesScripts'));
+      
+      add_action('admin_enqueue_scripts', array($this,'customAdminScripts'));
       
     }        
 
@@ -194,6 +196,15 @@ if (!class_exists('AdminPanel'))
         )
       );
     }
+
+    public function customAdminScripts()
+    {
+      global $typenow;
+
+      if($typenow === $this->cpt_name) {
+        wp_enqueue_script($this->cpt_name . '_scripts', "$this->plugin_url/assets/bid-opportunity-cpt-admin-scripts.js", array('jquery'), '1.0.0', true);
+      }
+    }
     /* 
     * Register inline style and scripts
     */
@@ -227,43 +238,42 @@ if (!class_exists('AdminPanel'))
               .bid-opportunity-status-default {
                 color: #50575e
               }
-          </style>
-
-          <script>
-            document.addEventListener('DOMContentLoaded', function() {
-              //conditional render if mode of procurement is public bidding or Alternative mode of procurement
-              const trigger = document.getElementById("conditional_render_trigger");
-              const conditional_render_container = document.getElementById("conditional_render_container");
-              
-              trigger.addEventListener("change", function(){
-                
-                const trigger_value = trigger.value;
-                
-                if(trigger_value === 'public') {
-                  conditional_render_container.classList.remove("hidden");
-                } else {
-                  conditional_render_container.classList.add("hidden");
-                }
-                
-              });
-              //conditional render if status is change to awarded
-              const awarded_conditional_trigger = document.getElementById("awarded_conditional_render_container_trigger");
-              const awarded_conditional_render_container = document.getElementById("awarded_conditional_render_container");
-              
-              awarded_conditional_trigger.addEventListener("change", function (e){
-                
-                const selected_inner_html = awarded_conditional_trigger.selectedOptions[0].innerHTML;               
-                
-                if(selected_inner_html.toLowerCase() === 'awarded') {
-                  awarded_conditional_render_container.classList.remove("hidden");
-                } else {
-                  awarded_conditional_render_container.classList.add("hidden");
-                }
-                
-              });
-              
-            });
-          </script>
+              .bidding-opportunity-supplemental-container
+              .bid-opportunity-required-field-border {
+                border: 1px solid #c21c1c;
+              }
+              #each_supplemental_documents_container
+              .badge {
+                background-color: #5498f1;
+                color: white;
+                padding: 4px 10px;
+                text-align: center;
+                border-radius: 5px;
+                margin: 5px 3px;
+              }
+              #each_supplemental_documents_container
+              .supplemental-action-delete:hover{
+                color: #c21c1c;
+                cursor: pointer;
+              }
+               #each_supplemental_documents_container
+              .supplemental-action-button:hover{                
+                cursor: pointer;
+              }
+              #each_supplemental_documents_container
+              .supplemental-document-links {
+                text-decoration: none;
+                color: white;
+              }
+              #each_supplemental_documents_container
+              .supplemental-document-links:hover {                
+                text-decoration: underline;
+              }
+              .bidding-opportunity-supplemental-container
+              #bidding-opportunity-supplemental-warning {
+                color: red;
+              }
+          </style>        
 
       <?php
       }    
@@ -386,16 +396,49 @@ if (!class_exists('AdminPanel'))
             name="<?php echo $this->variable_prefix; ?>prebid_date"
           />
         </div>
-        <div>
+        <div class="bidding-opportunity-supplemental-container" style="border:1px solid rgba(0,0,0,0.3);margin:10px 0;padding: 10px;border-radius:5px;">
+          <p><span id="bidding-opportunity-supplemental-warning"></span></P>
+          <h4><label>Supplemental Document(s):</label></h4>
+          <p>
+            <div id="each_supplemental_documents_container"></div>      
+          </p>          
+          <div style="display: grid; grid-template-columns: 8fr 8fr 1fr;gap: 10px;">            
+            <div>                   
+              <input
+                class="bidding-opportunity-admin-input"
+                type="text"
+                value="<?php echo $supplemental; ?>"
+                name="<?php echo $this->variable_prefix; ?>supplemental_document"
+                placeholder="Document Title"
+                id="supplemental_documents_document_name"
+              />
+            </div> 
+            <div>                    
+              <input
+                class="bidding-opportunity-admin-input"
+                type="text"
+                value="<?php echo $supplemental; ?>"
+                name="<?php echo $this->variable_prefix; ?>supplemental_document"
+                placeholder="Link of Document"
+                id="supplemental_documents_document_link"
+              />
+            </div>
+            <div>              
+              <button class="supplemental-action-button" id="bid_opportunity_supplemental_documents_add">Add</button>
+            </div>  
+          </div>
+        </div>
+        
+        <!-- <div>
           <h4><label>Supplemental Document:</label></h4>          
           <input
             class="bidding-opportunity-admin-input"
             type="text"
             value="<?php echo $supplemental; ?>"
-            name="<?php echo $this->variable_prefix; ?>supplemental_document"
+            name="<?php echo $this->variable_prefix; ?>supplemental_document[]"
             placeholder="Supplemental Document"
           />
-        </div> 
+        </div> --> 
       </div>
       
       <div>
