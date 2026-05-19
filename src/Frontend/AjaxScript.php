@@ -145,11 +145,18 @@ if (!class_exists('AjaxScript')) {
           $closing_date = get_post_meta(get_the_ID(), $this->variable_prefix . 'key_closing_date', true) ? date('F j, Y', strtotime(get_post_meta(get_the_ID(), $this->variable_prefix . 'key_closing_date', true))) : '';
           $prebid_date = get_post_meta(get_the_ID(), $this->variable_prefix . 'key_prebid_date', true) ? date('F j, Y', strtotime(get_post_meta(get_the_ID(), $this->variable_prefix . 'key_prebid_date', true))) : '';
           $supplier_name = get_post_meta(get_the_ID(), $this->variable_prefix . 'key_supplier_name', true) ? get_post_meta(get_the_ID(), $this->variable_prefix . 'key_supplier_name', true) : '';
-          $contract_amount = get_post_meta(get_the_ID(), $this->variable_prefix . 'key_contract_amount', true) ? '₱' . number_format(get_post_meta(get_the_ID(), $this->variable_prefix . 'key_contract_amount', true), 2) : '';
-          $supplemental = "<a title='Click to see Attachment' href='" . esc_url(get_post_meta(get_the_ID(), $this->variable_prefix . 'key_attachment', true)) . "' target='_blank'>" . get_post_meta(get_the_ID(), $this->variable_prefix . 'key_supplemental_document', true) . "</a>";
+          $contract_amount = get_post_meta(get_the_ID(), $this->variable_prefix . 'key_contract_amount', true) ? '₱' . number_format(get_post_meta(get_the_ID(), $this->variable_prefix . 'key_contract_amount', true), 2) : '';          
           $attachment = "<a href='" . esc_url(get_post_meta(get_the_ID(), $this->variable_prefix . 'key_attachment', true)) . "' target='_blank' title='Click to see Attachment' class='bid-opportunity-datatable-attachment-icon'>
                 <img src='" . $this->plugin_url . "/assets/images/external-link.svg" . "' alt='External Link' width='25' />
                 </a>";
+
+          $supplemental_docs = get_post_meta(get_the_ID(), $this->variable_prefix . 'key_supplemental_documents', true) ? json_decode(get_post_meta(get_the_ID(), $this->variable_prefix . 'key_supplemental_documents', true), true) : [];
+          $supplemental = '';
+          if(!empty($supplemental_docs)) {
+            foreach ($supplemental_docs as $doc) {
+              $supplemental .= "<a href='" . esc_url($doc['document_link']) . "' target='_blank' style='display:block;font-size:14px;'>" . $doc['document_name'] . "</a>";
+            }
+          }                    
 
           array_push($data, [            
             'counter'         => $counter++ + $offset,

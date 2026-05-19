@@ -18,7 +18,7 @@
 .bid-opportunity-status-active {
   color: #5498f1
 }
-.bid-opportunity-status-close {
+.bid-opportunity-status-failed {
   color: #df6e12
 }
 .bid-opportunity-status-awarded {
