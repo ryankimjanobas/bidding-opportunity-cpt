@@ -70,7 +70,7 @@ if (!class_exists('AdminPanel'))
     }
 
     /* 
-    * Automatically set bid status to close if closing date and current date is the same 
+    * Automatically set bid status to close if closing date elapsed
     */ 
     public function autoUpdateBidsStatus()
     {               
@@ -78,7 +78,7 @@ if (!class_exists('AdminPanel'))
       $date = new \DateTime('now', $tz);      
       $current = $date->format('Y-m-d'); 
 
-      //get all posts that status is not close and the closing date is today
+      //get all posts that status is not close and the closing date elapsed
       $posts = new \WP_Query(array(
         'post_type' => $this->cpt_name,
         'tax_query'  => array(
@@ -107,7 +107,7 @@ if (!class_exists('AdminPanel'))
           'hide_empty' => false,
         ));          
 
-        //retrieved status name close
+        //retrieved status slug close
         $close = array_values(array_filter($status_taxonimies, function($obj) {
           return $obj->slug === 'close';              
         }));                
@@ -227,7 +227,7 @@ if (!class_exists('AdminPanel'))
       $publish_date = get_post_meta($post->ID, $this->variable_prefix . "key_publish_date", true);
       $closing_date = get_post_meta($post->ID, $this->variable_prefix . "key_closing_date", true);
       $prebid_date = get_post_meta($post->ID, $this->variable_prefix . "key_prebid_date", true);
-      $supplemental_documents = get_post_meta($post->ID, $this->variable_prefix . "key_supplemental_document", true);
+      $supplemental_documents = get_post_meta($post->ID, $this->variable_prefix . "key_supplemental_documents", true);
       $bid_docs = get_post_meta($post->ID, $this->variable_prefix . "key_attachment", true);
       $supplier_name = get_post_meta($post->ID, $this->variable_prefix . "key_supplier_name", true);
       $contract_amount = get_post_meta($post->ID, $this->variable_prefix . "key_contract_amount", true);
@@ -338,7 +338,7 @@ if (!class_exists('AdminPanel'))
                 ?>
 
                   <span class='badge each-supplemental-document-badge'>
-                    <a href='<?php echo $doc['document_link']; ?>' target='_blank' class='supplemental-document-links'>
+                    <a href='<?php echo esc_url($doc['document_link']); ?>' target='_blank' class='supplemental-document-links'>
                       <?php echo $doc['document_name']; ?>
                     </a>
                     <span class='supplemental-action-delete' data-document_title='<?php echo $doc['document_name']; ?>'>
@@ -515,7 +515,7 @@ if (!class_exists('AdminPanel'))
       update_post_meta($post_id, $this->variable_prefix . "key_attachment", $attachment);      
       update_post_meta($post_id, $this->variable_prefix . "key_mode", $mode);
       update_post_meta($post_id, $this->variable_prefix . "key_prebid_date", $prebid_date);
-      update_post_meta($post_id, $this->variable_prefix . "key_supplemental_document", $supplemental_documents);
+      update_post_meta($post_id, $this->variable_prefix . "key_supplemental_documents", $supplemental_documents);
       update_post_meta($post_id, $this->variable_prefix . "key_supplier_name", $supplier_name);
       update_post_meta($post_id, $this->variable_prefix . "key_contract_amount", $contract_amount);
 
@@ -554,7 +554,7 @@ if (!class_exists('AdminPanel'))
         "bo_abc" => "ABC",
         "bo_publish_date" => "Publish Date",
         "bo_closing_date" => "Closing Date",
-        "bo_prebid_date" => 'Pre-bid Date',           
+        "bo_prebid_date" => 'Pre-bid Date',          
         "bo_mode" => "Mode of Procurement",
         "bo_status" => 'Status',
         "bo_attachment" => "Attachment"
@@ -667,12 +667,33 @@ if (!class_exists('AdminPanel'))
 
             $mode = get_post_meta($post_id, $this->variable_prefix . "key_mode", true);
             $thismode = '';
+            $supplemental_documents = '';
+
+            //get supplemental documents if mode is public bidding
+            if($mode === 'public') {
+              $documents = get_post_meta($post_id, $this->variable_prefix . "key_supplemental_documents", true);
+              $documents_array = $documents ? json_decode($documents, true) : '';
+
+              if(!empty($documents_array)) {                
+
+                $supplemental_documents .= "<div style='margin-top:7px'>";
+                $supplemental_documents .= "<span style='font-size:12px'>Supplemental document(s):</span>";
+                //loop for each document
+                foreach ($documents_array as $document) {
+                  $supplemental_documents .= "<br><a href='" . esc_url($document['document_link']) . "' target='_blank'>" . $document['document_name'] . "</a>";
+                }
+
+                $supplemental_documents .= "</div>";                
+
+              }              
+            }
 
             if(array_key_exists($mode, $this->modes_of_procurement)) {
               $thismode = $this->modes_of_procurement[$mode];
             }            
             
-            echo $thismode;          
+            echo "<span style='font-weight:500;'>" . $thismode . "</span>";
+            echo $supplemental_documents;                      
 
           break;
         case "bo_attachment":         
