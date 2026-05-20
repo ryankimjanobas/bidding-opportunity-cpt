@@ -43,8 +43,41 @@ if (!class_exists('AdminPanel'))
       add_action("parse_query", array($this, 'parseStatusFilterBox'));      
       
       add_action('admin_enqueue_scripts', array($this,'customAdminScripts'));
+
+      add_action('init', array($this, 'temporatyMethod'));      
       
     }           
+
+    public function temporatyMethod()
+    {
+      $posts = new \WP_Query(array(
+        'post_type' => 'bid_opportunity'        
+      ));     
+
+			if ($posts->have_posts()) {
+              
+        while ($posts->have_posts()) : $posts->the_post();          
+
+        $document = get_post_meta(get_the_ID(), 'bid_opportunity_cpt_key_supplemental_document', true) ?  get_post_meta(get_the_ID(), 'bid_opportunity_cpt_key_supplemental_document', true) : '';
+				$link = get_post_meta(get_the_ID(), 'bid_opportunity_cpt_key_attachment', true) ?  get_post_meta(get_the_ID(), 'bid_opportunity_cpt_key_attachment', true) : '';
+
+				 if($document && $link) {
+
+				 		$new_document = array([
+							'document_name' => $document,
+							'document_link' => $link
+						]);
+
+						update_post_meta(get_the_ID(), "bid_opportunity_cpt_key_supplemental_documents", json_encode($new_document));
+
+				 }				
+
+        endwhile;
+
+        wp_reset_query();        
+
+      }
+    }
     
     /* 
     * Register a custom post type names bid_opportunity 
@@ -229,6 +262,13 @@ if (!class_exists('AdminPanel'))
       $bid_docs = get_post_meta($post->ID, $this->variable_prefix . "key_attachment", true);
       $supplier_name = get_post_meta($post->ID, $this->variable_prefix . "key_supplier_name", true);
       $contract_amount = get_post_meta($post->ID, $this->variable_prefix . "key_contract_amount", true);                  
+
+      $supplemental = get_post_meta($post->ID, $this->variable_prefix . "key_supplemental_document", true);
+
+      if($supplemental) {
+        update_post_meta($post->ID, $this->variable_prefix . "key_supplemental_document", 'Sample supplemental dsadasds');
+      }
+      
       
       ?>
       
