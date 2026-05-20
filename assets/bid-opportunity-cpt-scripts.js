@@ -51,14 +51,17 @@ jQuery(document).ready(function($) {
     ],
     order: [[0, 'DESC']],
   }); 
-
+  let bo_cpt_public_bidding_completed_table;
   //initialize the datatable for shortcode intended for transparency public bidding
-  $('#bid-opportunity-cpt-public-bidding-transparency-table').DataTable({
+  bo_cpt_public_bidding_completed_table = $('#bid-opportunity-cpt-public-bidding-transparency-table').DataTable({
     processing: true,
     serverSide: true,
     ajax: {
-      url: biddingopportunitydatatablesajax.url + '?action=bid_opportunity_datatable',
-      data: {'identifier': 'transparency-public'}
+      url: biddingopportunitydatatablesajax.url + '?action=bid_opportunity_datatable',      
+      data: (data) => {
+        data.identifier = 'transparency-public',
+        data.year_publish_filter = $("#bo_completed_public_year_awarded_filter").val()
+      }
     },    
     language: {
       lengthMenu: "_MENU_",
@@ -133,14 +136,17 @@ jQuery(document).ready(function($) {
     ],
     order: [[0, 'DESC']],
   });
- 
+  let bo_cpt_alternative_method_completed_table;
   //initialize the datatable for shortcode intended for transparency of alternative method of procurement
-  $('#bid-opportunity-cpt-alternative-method-transparency-table').DataTable({
+  bo_cpt_alternative_method_completed_table = $('#bid-opportunity-cpt-alternative-method-transparency-table').DataTable({
     processing: true,
     serverSide: true,
     ajax: {
-      url: biddingopportunitydatatablesajax.url + '?action=bid_opportunity_datatable',
-      data: {'identifier': 'transparency-alternative'}
+      url: biddingopportunitydatatablesajax.url + '?action=bid_opportunity_datatable',      
+      data: (data) => {
+        data.identifier = 'transparency-alternative',
+        data.year_publish_filter = $("#bo_completed_alternative_year_awarded_filter").val()
+      }
     },    
     language: {
       lengthMenu: "_MENU_",
@@ -170,8 +176,9 @@ jQuery(document).ready(function($) {
     ],
     order: [[0, 'DESC']],
   });
-
-  //handle the reload of datatable onchange of datatable filter on frontend
+  /* 
+  * handle the reload of datatable onchange of datatable filter on frontend
+  */  
   $(document).on('change', '.year_publish_filter', function() {        
 
     const this_element_id = $(this).prop("id");
@@ -183,11 +190,16 @@ jQuery(document).ready(function($) {
       case "bo_alternative_year_publish_filter":
         bo_cpt_alternative_method_table.ajax.reload(null, false);
         break;
+      case "bo_completed_public_year_awarded_filter":
+        bo_cpt_public_bidding_completed_table.ajax.reload(null, false);
+        break;
+      case "bo_completed_alternative_year_awarded_filter":
+        bo_cpt_alternative_method_completed_table.ajax.reload(null, false);
+        break;
       default:
         break;
     }
 
-    
   });
 
 });

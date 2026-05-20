@@ -80,10 +80,28 @@ if (!class_exists('PublicBidding')) {
 
     ?>     
 
-      <div class='bid-opportunity-cpt-datatable-container'>
-        <div style="text-align:left;">
-          <p class='title'>Completed | Public Bidding</p>
-        </div>        
+      <div class='bid-opportunity-cpt-datatable-container'>        
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr;gap: 20px;">
+          <div style="text-align:left;">
+            <p class='title'>Completed | Public Bidding</p>
+          </div>
+          <div style="text-align:right;">
+            <label for="year_publish_filter" class='title'>Year Publish:</label>
+            <select id="bo_completed_public_year_awarded_filter" class="year_publish_filter" style="width:250px;height:35px;border-radius:2px;">        
+              <option value="">All</option>              
+              <?php              
+                $year_end = (int)date('Y');
+                $year_start  = $year_end - 5;                     
+
+                for ($year = $year_end; $year >= $year_start; $year--) {         
+                    echo '<option value="'. $year .'">'. $year .'</option>';
+                }               
+              ?>
+            </select>
+          </div>  
+        </div>
+
         <table id='bid-opportunity-cpt-public-bidding-transparency-table' class='bid-opportunity-cpt-datatable'>
           <thead>
             <tr>
