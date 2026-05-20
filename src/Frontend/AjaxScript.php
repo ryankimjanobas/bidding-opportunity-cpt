@@ -183,7 +183,7 @@ if (!class_exists('AjaxScript')) {
             'supplier_name'   => $supplier_name,
             'contract_amount' => $contract_amount,
             'attachment'      => $attachment,
-            'status'          => ( ! empty($status)) ? $status[0]->name : ''
+            'status'          => ( ! empty($status)) ? "<span class='bid-opportunity-status-" . $status[0]->slug . "'>" . $status[0]->name ."</span>" : ''
           ]);                             
 
         endwhile;

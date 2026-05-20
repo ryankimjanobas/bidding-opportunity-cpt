@@ -44,87 +44,7 @@ if (!class_exists('AdminPanel'))
       
       add_action('admin_enqueue_scripts', array($this,'customAdminScripts'));
       
-    }        
-
-    /* 
-    * Add required terms on status cpt
-    */
-    public function insertRequiredStatus( $taxonomy, $object_type, $arg )
-    {                       
-      if ( $this->taxonomy_status === $taxonomy ) {
-
-        foreach ($this->required_status as $status) {
-
-          if( ! term_exists( $status['term'], $this->taxonomy_status )) {
-            wp_insert_term(
-              $status['term'],
-              $this->taxonomy_status,
-              array(
-                'description' => $status['description'],
-                'slug'        => $status['slug']
-              )
-            );    
-          }                
-        }
-      }    
-    }
-
-    /* 
-    * Automatically set bid status to close if closing date elapsed
-    */ 
-    public function autoUpdateBidsStatus()
-    {               
-      $tz = new \DateTimeZone('Asia/Manila');
-      $date = new \DateTime('now', $tz);      
-      $current = $date->format('Y-m-d'); 
-
-      //get all posts that status is not close and the closing date elapsed
-      $posts = new \WP_Query(array(
-        'post_type' => $this->cpt_name,
-        'tax_query'  => array(
-            array( 
-                'taxonomy' => $this->taxonomy_status,
-                'field'    => 'slug',
-                'terms'    => array( 'close', 'awarded', 'failed' ),
-                'operator' => 'NOT IN',
-            ),
-        ),
-        'meta_query' => array(
-          array(
-              'key'     => $this->variable_prefix . 'key_closing_date',
-              'value'   => $current,
-              'compare' => '<=',
-              'type'    => 'DATE',
-          ),
-        ),
-      ));                        
-      
-      if ($posts->have_posts()) {        
-
-        //get statusses
-        $status_taxonimies = get_terms( array(  
-          'taxonomy' => $this->taxonomy_status,
-          'hide_empty' => false,
-        ));          
-
-        //retrieved status slug close
-        $close = array_values(array_filter($status_taxonimies, function($obj) {
-          return $obj->slug === 'close';              
-        }));                
-
-        $close_id = $close[0]->term_id;                             
-
-        while ($posts->have_posts()) : $posts->the_post();      
-        
-          wp_set_object_terms( get_the_ID(), $close_id, $this->taxonomy_status, false );     
-
-        endwhile;
-        
-        wp_reset_query();        
-
-      }
-      
-    }    
+    }           
     
     /* 
     * Register a custom post type names bid_opportunity 
@@ -194,6 +114,84 @@ if (!class_exists('AdminPanel'))
         )
       );
     }
+     /* 
+    * Add required terms on status cpt
+    */
+    public function insertRequiredStatus( $taxonomy, $object_type, $arg )
+    {                       
+      if ( $this->taxonomy_status === $taxonomy ) {
+
+        foreach ($this->required_status as $status) {
+
+          if( ! term_exists( $status['term'], $this->taxonomy_status )) {
+            wp_insert_term(
+              $status['term'],
+              $this->taxonomy_status,
+              array(
+                'description' => $status['description'],
+                'slug'        => $status['slug']
+              )
+            );    
+          }                
+        }
+      }    
+    }
+    /* 
+    * Automatically set bid status to close if closing date elapsed
+    */ 
+    public function autoUpdateBidsStatus()
+    {               
+      $tz = new \DateTimeZone('Asia/Manila');
+      $date = new \DateTime('now', $tz);      
+      $current = $date->format('Y-m-d'); 
+
+      //get all posts that status is not close and the closing date elapsed
+      $posts = new \WP_Query(array(
+        'post_type' => $this->cpt_name,
+        'tax_query'  => array(
+            array( 
+                'taxonomy' => $this->taxonomy_status,
+                'field'    => 'slug',
+                'terms'    => array( 'close', 'awarded', 'failed' ),
+                'operator' => 'NOT IN',
+            ),
+        ),
+        'meta_query' => array(
+          array(
+              'key'     => $this->variable_prefix . 'key_closing_date',
+              'value'   => $current,
+              'compare' => '<=',
+              'type'    => 'DATE',
+          ),
+        ),
+      ));                        
+      
+      if ($posts->have_posts()) {        
+
+        //get statusses
+        $status_taxonimies = get_terms( array(  
+          'taxonomy' => $this->taxonomy_status,
+          'hide_empty' => false,
+        ));          
+
+        //retrieved status slug close
+        $close = array_values(array_filter($status_taxonimies, function($obj) {
+          return $obj->slug === 'close';              
+        }));                
+
+        $close_id = $close[0]->term_id;                             
+
+        while ($posts->have_posts()) : $posts->the_post();      
+        
+          wp_set_object_terms( get_the_ID(), $close_id, $this->taxonomy_status, false );     
+
+        endwhile;
+        
+        wp_reset_query();        
+
+      }
+      
+    }    
     /* 
     * Register admin styles and scripts
     */

@@ -72,3 +72,23 @@
 .dt-container .dt-input {
   border: 1px solid #d3d3d3 !important;
 }        
+
+.bid-opportunity-cpt-datatable-container
+.bid-opportunity-status-active {
+  color: #5498f1
+}
+
+.bid-opportunity-cpt-datatable-container
+.bid-opportunity-status-failed {
+  color: #df6e12
+}
+
+.bid-opportunity-cpt-datatable-container
+.bid-opportunity-status-awarded {
+  color: #14b336
+}
+
+.bid-opportunity-cpt-datatable-container
+.bid-opportunity-status-default {
+  color: #50575e
+}
