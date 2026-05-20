@@ -228,7 +228,7 @@ if (!class_exists('AdminPanel'))
       $supplemental_documents = get_post_meta($post->ID, $this->variable_prefix . "key_supplemental_documents", true);
       $bid_docs = get_post_meta($post->ID, $this->variable_prefix . "key_attachment", true);
       $supplier_name = get_post_meta($post->ID, $this->variable_prefix . "key_supplier_name", true);
-      $contract_amount = get_post_meta($post->ID, $this->variable_prefix . "key_contract_amount", true);
+      $contract_amount = get_post_meta($post->ID, $this->variable_prefix . "key_contract_amount", true);                  
       
       ?>
       
