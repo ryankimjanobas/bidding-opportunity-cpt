@@ -1,13 +1,15 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-The project is a simple wordpress plugin that creates a custom post type (name: Bid Opportunities) on admin panel together with a custom taxonomy (Statusses).
-The plugin has two types of bidding opportunity namely Public Bidding and Alternative Method of Procurement, it also has statusses with default values of (Close, Active and Awarded),
-it has the ability to add statusses as many as you like and can set bidding status according to your needs. When the bidding closing date is equal to current day the status of the bidding is automatically set to close.
+The project is a simple wordpress plugin that creates a custom post type (name: Bid Opportunities) on admin panel. The plugin has two types of bidding opportunity namely Public Bidding and Alternative Method of Procurement, it also has statusses (taxonomy) with default values of (Close, Active, Failed and Awarded),
+it has the ability to add statusses as many as you like and can set bidding status according to your needs.
 
   - Close status means that bidding closing date elapsed
   - Active status means that bidding is active
   - Awarded status means that bidding is completed and awarded to a certain supplier
+  - Failed status means that bidding is failed
+  - When the bidding closing date elapsed status of the bidding is automatically set to close.
+  - It also has a filter by date publish on frontend
 
 The project creates 4 shortcode to display the added bid opportunity on the frontend of the site by using jQuery dataTables.
   _Below is the list of shortcodes that the plugin creates upon activation._
