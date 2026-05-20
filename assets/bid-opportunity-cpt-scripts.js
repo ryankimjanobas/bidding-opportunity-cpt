@@ -10,14 +10,17 @@ jQuery(document).ready(function($) {
   /* 
   * Public bidding datatables
   */
-
+  let bo_cpt_public_bidding_table;
   //initialize the datatable for shortcode intended for bid opportunities public bidding
-  $('#bid-opportunity-cpt-public-bidding-table').DataTable({
+  bo_cpt_public_bidding_table = $('#bid-opportunity-cpt-public-bidding-table').DataTable({
     processing: true,
     serverSide: true,
     ajax: {
       url: biddingopportunitydatatablesajax.url + '?action=bid_opportunity_datatable',
-      data: {'identifier': 'bid-opportunities-public'}
+      data: (data) => {
+        data.identifier = 'bid-opportunities-public',
+        data.year_publish_filter = $("#bo_public_year_publish_filter").val()
+      }
     },    
     language: {
       lengthMenu: "_MENU_",
@@ -47,7 +50,7 @@ jQuery(document).ready(function($) {
       }
     ],
     order: [[0, 'DESC']],
-  });
+  }); 
 
   //initialize the datatable for shortcode intended for transparency public bidding
   $('#bid-opportunity-cpt-public-bidding-transparency-table').DataTable({
@@ -91,14 +94,17 @@ jQuery(document).ready(function($) {
   /* 
   * Alternative method of procurement datatables
   */
-
+  let bo_cpt_alternative_method_table;
   //initialize the datatable for shortcode intended for bid opportunities of alternative method of procurement
-  $('#bid-opportunity-cpt-alternative-method-table').DataTable({
+  bo_cpt_alternative_method_table = $('#bid-opportunity-cpt-alternative-method-table').DataTable({
     processing: true,
     serverSide: true,
     ajax: {
       url: biddingopportunitydatatablesajax.url + '?action=bid_opportunity_datatable',
-      data: {'identifier': 'bid-opportunities-alternative'}
+      data: (data) => {
+        data.identifier = 'bid-opportunities-alternative',
+        data.year_publish_filter = $("#bo_alternative_year_publish_filter").val()
+      }
     },    
     language: {
       lengthMenu: "_MENU_",
@@ -127,7 +133,7 @@ jQuery(document).ready(function($) {
     ],
     order: [[0, 'DESC']],
   });
-
+ 
   //initialize the datatable for shortcode intended for transparency of alternative method of procurement
   $('#bid-opportunity-cpt-alternative-method-transparency-table').DataTable({
     processing: true,
@@ -163,6 +169,25 @@ jQuery(document).ready(function($) {
       }
     ],
     order: [[0, 'DESC']],
+  });
+
+  //handle the reload of datatable onchange of datatable filter on frontend
+  $(document).on('change', '.year_publish_filter', function() {        
+
+    const this_element_id = $(this).prop("id");
+
+    switch (this_element_id) {
+      case "bo_public_year_publish_filter":
+        bo_cpt_public_bidding_table.ajax.reload(null, false);
+        break;
+      case "bo_alternative_year_publish_filter":
+        bo_cpt_alternative_method_table.ajax.reload(null, false);
+        break;
+      default:
+        break;
+    }
+
+    
   });
 
 });

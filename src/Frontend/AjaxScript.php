@@ -36,7 +36,8 @@ if (!class_exists('AjaxScript')) {
       $orderDir = $request['order'][0]['dir'];
       $search = $request['search']['value'];
       $page_identifier = $request['identifier'];
-      
+      $year_publish_filter = $request['year_publish_filter'];
+           
       $columns = array(
         1 => 'order_by_title',
         2 => 'order_by_abc',
@@ -87,12 +88,7 @@ if (!class_exists('AjaxScript')) {
           break;
       }
 
-      $data = [];
-
-      $posts = new \WP_Query(array(
-        'post_type' => 'bid_opportunity',
-        'tax_query'  => count($tax_query) ? array($tax_query) : '',
-        'meta_query' => array(
+      $meta_query = array(
           array(
             'key'     => $this->variable_prefix . 'key_mode',
             'value'   => $meta_query_value,
@@ -102,7 +98,7 @@ if (!class_exists('AjaxScript')) {
             'key'     => $this->variable_prefix . 'key_title',
             'value'   => $search,
             'compare' => 'LIKE'
-          ),
+          ),          
           'order_by_title' => array(
             'key'     => $this->variable_prefix . 'key_title',
             'compare' => 'EXISTS'
@@ -121,8 +117,26 @@ if (!class_exists('AjaxScript')) {
             'key'     => $this->variable_prefix . 'key_closing_date',
             'compare' => 'EXISTS',
             'type'    => 'DATE'
+          )          
+      );
+
+      if($year_publish_filter && $year_publish_filter !== '') {
+        array_push($meta_query,
+          array(
+            'key'     => $this->variable_prefix . 'key_publish_date',
+            'value'   => array( $year_publish_filter . '-01-01', $year_publish_filter . '-12-31' ),
+            'compare' => 'BETWEEN',
+            'type'    => 'DATE',
           )
-        ),
+        );
+      }
+
+      $data = [];
+
+      $posts = new \WP_Query(array(
+        'post_type' => 'bid_opportunity',
+        'tax_query'  => count($tax_query) ? array($tax_query) : '',
+        'meta_query' => $meta_query,
         'posts_per_page' => $posts_per_page,
         'offset' => $offset,        
         'orderby' => $columns[$orderBy],        
