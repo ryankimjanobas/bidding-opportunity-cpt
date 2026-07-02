@@ -8,9 +8,9 @@ namespace BIDDOP;
 
 defined('ABSPATH') or die('Hey, you should not be here!');
 
-if (!class_exists('BiddoInit')) {
+if (!class_exists('BiddopInit')) {
 
-	final class BiddoInit
+	final class BiddopInit
 	{
 		/**
 		 * Store all the classes inside an array
@@ -19,11 +19,11 @@ if (!class_exists('BiddoInit')) {
 		public static function services()
 		{
 			return [
-				Admin\BiddoAdminPanel::class,
-				Base\BiddoEnqueue::class,
-				Frontend\BiddoAjaxScript::class,
-				Frontend\BiddoPublicBidding::class,
-				Frontend\BiddoAlternativeMethod::class			
+				Admin\BiddopAdminPanel::class,
+				Base\BiddopEnqueue::class,
+				Frontend\BiddopAjaxScript::class,
+				Frontend\BiddopPublicBidding::class,
+				Frontend\BiddopAlternativeMethod::class			
 			];
 		}
 

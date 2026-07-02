@@ -10,11 +10,11 @@ namespace BIDDOP\Frontend;
 
 defined('ABSPATH') or die('Hey, you should not be here!');
 
-use BIDDOP\Base\BiddoBaseController;
+use BIDDOP\Base\BiddopBaseController;
 
-if (!class_exists('BiddoPublicBidding')) {
+if (!class_exists('BiddopAlternativeMethod')) {
 
-  class BiddoPublicBidding extends BiddoBaseController
+  class BiddopAlternativeMethod extends BiddopBaseController
   {
     public function register()
     {      
@@ -23,37 +23,37 @@ if (!class_exists('BiddoPublicBidding')) {
 
     public function initShortcode()
     {      
-      add_shortcode('bidding_opportunity_public_bidding_datatable', array($this, 'publicBiddingDatatableShortcode'));
-      add_shortcode('bidding_opportunity_public_bidding_awarded_datatable', array($this, 'publicBiddingTransparencyDatatableShortcode'));
+      add_shortcode('bidding_opportunity_alternative_method_datatable', array($this, 'alternativeMethodDatatableShortcode'));
+      add_shortcode('bidding_opportunity_alternative_method_awarded_datatable', array($this, 'alternativeMethodTransparencyDatatableShortcode'));
     }
     
-    public function publicBiddingDatatableShortcode()
+    public function alternativeMethodDatatableShortcode()
     {
-     
+
     ?>     
 
-      <div class='bid-opportunity-cpt-datatable-container'>
+      <div class='bid-opportunity-cpt-datatable-container'>                
         <div style="display: grid; grid-template-columns: 1fr 1fr;gap: 20px;">
           <div style="text-align:left;">
-            <p class='title'>Bidding Opportunities | Public Bidding</p>
+            <p class='title'>Bidding Opportunities | Alternative Method of Procurement</p>
           </div>
           <div style="text-align:right;">
             <label for="year_publish_filter" class='title'>Year Publish:</label>
-            <select id="bo_public_year_publish_filter" class="year_publish_filter" style="width:250px;height:35px;border-radius:2px;">        
+            <select id="bo_alternative_year_publish_filter" class="year_publish_filter" style="width:250px;height:35px;border-radius:2px;">        
               <option value="">All</option>              
               <?php              
                 $year_end = (int)date('Y');
                 $year_start  = $year_end - 5;                     
 
                 for ($year = $year_end; $year >= $year_start; $year--) {         
-                    echo '<option value="'. $year .'">'. $year .'</option>';
+                  echo '<option value="'. $year .'">'. $year .'</option>';
                 }               
               ?>
             </select>
           </div>  
         </div>
-              
-        <table id='bid-opportunity-cpt-public-bidding-table' class='bid-opportunity-cpt-datatable'>
+        
+        <table id='bid-opportunity-cpt-alternative-method-table' class='bid-opportunity-cpt-datatable'>
           <thead>
             <tr>
               <th width='20'>#</th>
@@ -61,10 +61,8 @@ if (!class_exists('BiddoPublicBidding')) {
               <th>ABC</th>
               <th>Publish Date</th>
               <th>Closing Date</th>
-              <th>Pre-bid Date</th>
-              <th>Supplemental</th>
               <th>Attachment</th>
-              <th>Status</th>        
+              <th>Status</th>   
             </tr>
           </thead>
           <tbody></tbody>
@@ -75,34 +73,32 @@ if (!class_exists('BiddoPublicBidding')) {
 
     }
 
-    public function publicBiddingTransparencyDatatableShortcode()
+    public function alternativeMethodTransparencyDatatableShortcode()
     {
 
     ?>     
 
       <div class='bid-opportunity-cpt-datatable-container'>        
-        
         <div style="display: grid; grid-template-columns: 1fr 1fr;gap: 20px;">
           <div style="text-align:left;">
-            <p class='title'>Completed | Public Bidding</p>
+            <p class='title'>Completed | Alternative Method of Procurement</p>
           </div>
           <div style="text-align:right;">
             <label for="year_publish_filter" class='title'>Year Publish:</label>
-            <select id="bo_completed_public_year_awarded_filter" class="year_publish_filter" style="width:250px;height:35px;border-radius:2px;">        
+            <select id="bo_completed_alternative_year_awarded_filter" class="year_publish_filter" style="width:250px;height:35px;border-radius:2px;">        
               <option value="">All</option>              
               <?php              
                 $year_end = (int)date('Y');
                 $year_start  = $year_end - 5;                     
 
                 for ($year = $year_end; $year >= $year_start; $year--) {         
-                    echo '<option value="'. $year .'">'. $year .'</option>';
+                  echo '<option value="'. $year .'">'. $year .'</option>';
                 }               
               ?>
             </select>
           </div>  
-        </div>
-
-        <table id='bid-opportunity-cpt-public-bidding-transparency-table' class='bid-opportunity-cpt-datatable'>
+        </div>        
+        <table id='bid-opportunity-cpt-alternative-method-transparency-table' class='bid-opportunity-cpt-datatable'>
           <thead>
             <tr>
               <th width='20'>#</th>
@@ -110,8 +106,6 @@ if (!class_exists('BiddoPublicBidding')) {
               <th>ABC</th>
               <th>Publish Date</th>
               <th>Closing Date</th>
-              <th>Pre-bid Date</th>
-              <th>Supplemental</th>
               <th>Supplier Name</th>
               <th>Contract Amount</th>
               <th>Attachment</th>                         

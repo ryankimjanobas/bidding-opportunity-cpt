@@ -10,11 +10,11 @@ namespace BIDDOP\Frontend;
 
 defined('ABSPATH') or die('Hey, you should not be here!');
 
-use BIDDOP\Base\BiddoBaseController;
+use BIDDOP\Base\BiddopBaseController;
 
-if (!class_exists('BiddoAjaxScript')) {
+if (!class_exists('BiddopAjaxScript')) {
 
-  class BiddoAjaxScript extends BiddoBaseController
+  class BiddopAjaxScript extends BiddopBaseController
   {
     public function register()
     {

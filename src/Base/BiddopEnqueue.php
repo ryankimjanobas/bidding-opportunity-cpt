@@ -10,11 +10,11 @@ namespace BIDDOP\Base;
 
 defined('ABSPATH') or die('Hey, you should not be here!');
 
-use BIDDOP\Base\BiddoBaseController;
+use BIDDOP\Base\BiddopBaseController;
 
-if (!class_exists('BiddoEnqueue')) {
+if (!class_exists('BiddopEnqueue')) {
   
-  class BiddoEnqueue extends BiddoBaseController
+  class BiddopEnqueue extends BiddopBaseController
   {
     public function register()
     {

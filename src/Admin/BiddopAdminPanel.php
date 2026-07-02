@@ -9,12 +9,12 @@ namespace BIDDOP\Admin;
 
 defined('ABSPATH') or die('Hey, you should not be here!');
 
-use BIDDOP\Base\BiddoBaseController;
+use BIDDOP\Base\BiddopBaseController;
 
-if (!class_exists('BiddoAdminPanel'))
+if (!class_exists('BiddopAdminPanel'))
 {
 
-  class BiddoAdminPanel extends BiddoBaseController
+  class BiddopAdminPanel extends BiddopBaseController
   {        
     public function register()
     {

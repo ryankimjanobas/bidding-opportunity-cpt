@@ -8,13 +8,13 @@ namespace BIDDOP\Base;
 
 defined('ABSPATH') or die('Hey, you should not be here!');
 
-if (!class_exists('BiddoActivate')) {
+if (!class_exists('BiddopDeactivate')) {
 
-	class BiddoActivate
+	class BiddopDeactivate
 	{
-		public static function activate()
+		public static function deactivate()
 		{
-			flush_rewrite_rules();						
+			flush_rewrite_rules();
 		}
 	}
 	

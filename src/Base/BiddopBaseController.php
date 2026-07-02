@@ -8,9 +8,9 @@ namespace BIDDOP\Base;
 
 defined('ABSPATH') or die('Hey, you should not be here!');
 
-if (!class_exists('BiddoBaseController')) {
+if (!class_exists('BiddopBaseController')) {
 
-	class BiddoBaseController
+	class BiddopBaseController
 	{
 		public $plugin_path;
 
@@ -59,7 +59,17 @@ if (!class_exists('BiddoBaseController')) {
         ),
       );
 
-
 		}
+
+		public static function biddopActivate()
+		{
+			flush_rewrite_rules();						
+		}
+
+		public static function biddopDeactivate()
+		{
+			flush_rewrite_rules();
+		}
+
 	}
 }
