@@ -6,11 +6,11 @@
  * All codes handling the request of datatables on frontend
  */
 
-namespace App\Frontend;
+namespace BIDDOP\Frontend;
 
 defined('ABSPATH') or die('Hey, you should not be here!');
 
-use App\Base\BiddoBaseController;
+use BIDDOP\Base\BiddoBaseController;
 
 if (!class_exists('BiddoAjaxScript')) {
 

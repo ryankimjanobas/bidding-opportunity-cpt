@@ -4,7 +4,7 @@
  * @package  BiddingOpportunityPlugin
  */
 
-namespace App\Base;
+namespace BIDDOP\Base;
 
 defined('ABSPATH') or die('Hey, you should not be here!');
 

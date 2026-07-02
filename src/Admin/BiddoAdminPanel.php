@@ -5,11 +5,11 @@
  * All codes related to admin panel here
  */
 
-namespace App\Admin;
+namespace BIDDOP\Admin;
 
 defined('ABSPATH') or die('Hey, you should not be here!');
 
-use App\Base\BiddoBaseController;
+use BIDDOP\Base\BiddoBaseController;
 
 if (!class_exists('BiddoAdminPanel'))
 {
