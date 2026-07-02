@@ -22,33 +22,33 @@ if (!class_exists('BiddopAdminPanel'))
       * Register all services neeeded for the plugin to work 
       */
 
-      add_action('init', array($this, 'registerCustomPostType'));
+      add_action('init', array($this, 'biddopRegisterCustomPostType'));
       
-      add_action('init', array($this, 'cptAddTaxonomyStatusses'));        
+      add_action('init', array($this, 'biddopCptAddTaxonomyStatusses'));        
 
-      add_action('init', array($this, 'autoUpdateBidsStatus'));      
+      add_action('init', array($this, 'biddopAutoUpdateBidsStatus'));      
 
-      add_action( 'registered_taxonomy', array($this, 'insertRequiredStatus'), 10, 3 );
+      add_action( 'registered_taxonomy', array($this, 'biddopInsertRequiredStatus'), 10, 3 );
 
-      add_action("save_post", array($this, 'cptSaveValues'), 10, 2);                        
+      add_action("save_post", array($this, 'biddopCptSaveValues'), 10, 2);                        
 
-      add_action('manage_' . $this->cpt_name . '_posts_columns', array($this, 'cptCustomTableColumns'));
+      add_action('manage_' . $this->cpt_name . '_posts_columns', array($this, 'biddopCptCustomTableColumns'));
 
-      add_action('manage_' . $this->cpt_name . '_posts_custom_column', array($this, 'cptCustomTableColumnsData'), 10, 2);
+      add_action('manage_' . $this->cpt_name . '_posts_custom_column', array($this, 'biddopCptCustomTableColumnsData'), 10, 2);
 
-      add_filter('manage_edit-' . $this->cpt_name . '_sortable_columns', array($this, 'cptCustomSortableColumns'));      
+      add_filter('manage_edit-' . $this->cpt_name . '_sortable_columns', array($this, 'biddopCptCustomSortableColumns'));      
 
-      add_action("restrict_manage_posts", array($this, 'statusFilterBox'));
+      add_action("restrict_manage_posts", array($this, 'biddopStatusFilterBox'));
 
-      add_action("parse_query", array($this, 'parseStatusFilterBox'));      
+      add_action("parse_query", array($this, 'biddopParseStatusFilterBox'));      
       
-      add_action('admin_enqueue_scripts', array($this,'customAdminScripts'));     
+      add_action('admin_enqueue_scripts', array($this,'biddopCustomAdminScripts'));     
       
     }                   
     /* 
     * Register a custom post type names bid_opportunity 
     */
-    public function registerCustomPostType()
+    public function biddopRegisterCustomPostType()
     {      
       $labels = array(
         'name' => __('Bid Opportunities'),
@@ -82,7 +82,7 @@ if (!class_exists('BiddopAdminPanel'))
         'menu_position' => 6,
         'menu_icon' => 'dashicons-image-filter',
         'supports' => array(''),
-        'register_meta_box_cb' => array($this, 'cptRegisterMetabox')
+        'register_meta_box_cb' => array($this, 'biddopCptRegisterMetabox')
       );
 
       register_post_type($this->cpt_name, $args);
@@ -91,7 +91,7 @@ if (!class_exists('BiddopAdminPanel'))
     /* 
     * Register a taxonomy statuses to custom post type 
     */
-    public function cptAddTaxonomyStatusses()
+    public function biddopCptAddTaxonomyStatusses()
     {      
       register_taxonomy(
         $this->taxonomy_status,
@@ -116,7 +116,7 @@ if (!class_exists('BiddopAdminPanel'))
      /* 
     * Add required terms on status cpt
     */
-    public function insertRequiredStatus( $taxonomy, $object_type, $arg )
+    public function biddopInsertRequiredStatus( $taxonomy, $object_type, $arg )
     {                       
       if ( $this->taxonomy_status === $taxonomy ) {
 
@@ -138,7 +138,7 @@ if (!class_exists('BiddopAdminPanel'))
     /* 
     * Automatically set bid status to close if closing date elapsed
     */ 
-    public function autoUpdateBidsStatus()
+    public function biddopAutoUpdateBidsStatus()
     {               
       $tz = new \DateTimeZone('Asia/Manila');
       $date = new \DateTime('now', $tz);      
@@ -194,7 +194,7 @@ if (!class_exists('BiddopAdminPanel'))
     /* 
     * Register admin styles and scripts
     */
-    public function customAdminScripts()
+    public function biddopCustomAdminScripts()
     {
       wp_enqueue_script($this->cpt_name . '_scripts', "$this->plugin_url/assets/bid-opportunity-cpt-admin-scripts.js", array('jquery'), '1.0.0', true);
       wp_enqueue_style($this->cpt_name . '_styles', "$this->plugin_url/assets/bid-opportunity-cpt-admin-styles.css");
@@ -202,9 +202,9 @@ if (!class_exists('BiddopAdminPanel'))
     /* 
     * Register the metabox 
     */
-    public function cptRegisterMetabox()
+    public function biddopCptRegisterMetabox()
     {      
-      add_meta_box("cpt-id", "Bidding Details", array($this, 'cptMetaBoxLayout'), $this->cpt_name);
+      add_meta_box("biddopbiddingdetails", "Bidding Details", array($this, 'biddopCptMetaBoxLayout'), $this->cpt_name);
       //remove publish metabox
       remove_meta_box( 'submitdiv', $this->cpt_name, 'side' );
     }
@@ -212,7 +212,7 @@ if (!class_exists('BiddopAdminPanel'))
     /* 
     * metabox layout
     */        
-    public function cptMetaBoxLayout($post)
+    public function biddopCptMetaBoxLayout($post)
     {                             
       wp_nonce_field( $this->variable_prefix . 'my_cpt_save_action', $this->variable_prefix . 'my_cpt_nonce' );
 
@@ -466,7 +466,7 @@ if (!class_exists('BiddopAdminPanel'))
     /* 
     * Save values of metabox fields to db
     */         
-    public function cptSaveValues($post_id, $post)
+    public function biddopCptSaveValues($post_id, $post)
     {        
       /*
       * NONCE check and verification        
@@ -532,7 +532,7 @@ if (!class_exists('BiddopAdminPanel'))
       if ( ! empty( $title ) && $post->post_title !== $title ) {        
 
           // Unhook this function to prevent an infinite loop when updating
-          remove_action( 'save_post', array($this,'cptSaveValues') );
+          remove_action( 'save_post', array($this,'biddopCptSaveValues') );
 
           wp_update_post( array(
               'ID'         => $post_id,
@@ -542,7 +542,7 @@ if (!class_exists('BiddopAdminPanel'))
           ) );
 
           // Re-hook the function
-          add_action( 'save_post', array($this, 'cptSaveValues'), 10, 2 );
+          add_action( 'save_post', array($this, 'biddopCptSaveValues'), 10, 2 );
       }
 
     }
@@ -550,7 +550,7 @@ if (!class_exists('BiddopAdminPanel'))
     /* 
     * Display custom columns on admin panel listing of bidding opportunities 
     */
-    public function cptCustomTableColumns($columns)
+    public function biddopCptCustomTableColumns($columns)
     {      
       $columns = array(
         "cb" => "<input type='checkbox'/>",
@@ -570,7 +570,7 @@ if (!class_exists('BiddopAdminPanel'))
     /* 
     * Make custom columns sortable on admin panel 
     */
-    public function cptCustomSortableColumns($columns)
+    public function biddopCptCustomSortableColumns($columns)
     {            
       $columns['bo_title'] = "title";
       $columns['bo_abc'] = "abc";
@@ -585,7 +585,7 @@ if (!class_exists('BiddopAdminPanel'))
     /* 
     * Add filter by status on admin panel 
     */
-    public function statusFilterBox()
+    public function biddopStatusFilterBox()
     {      
       global $typenow;
 
@@ -609,7 +609,7 @@ if (!class_exists('BiddopAdminPanel'))
     /* 
     * Parse query on status filter in admin panel 
     */
-    public function parseStatusFilterBox($query)
+    public function biddopParseStatusFilterBox($query)
     {            
       global $typenow;
       global $pagenow;
@@ -629,7 +629,7 @@ if (!class_exists('BiddopAdminPanel'))
     /* 
     * Display data of custom table columns on admin panel
     */
-    public function cptCustomTableColumnsData($column, $post_id)
+    public function biddopCptCustomTableColumnsData($column, $post_id)
     {     
       switch ($column) {
 

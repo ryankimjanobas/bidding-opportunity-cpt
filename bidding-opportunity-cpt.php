@@ -4,6 +4,7 @@
  * @package  BiddingOpportunityPlugin
  */
 
+
 /*
   Plugin Name: Bidding Opportunity Custom Post Type
   Description: This is a simple plugin for purpose of having a custom post type named bidding opportunity
@@ -22,8 +23,8 @@ if ( file_exists( dirname( __FILE__ ) . '/vendor/autoload.php' ) ) {
 /**
  * The code that runs during plugin activation
  */
-function activate_bidding_opportunity_plugin() {
-	BIDDOP\Base\BiddopActivate::activate();
+function activate_bidding_opportunity_plugin() {	
+  BIDDOP\Base\BiddopBaseController::biddopActivate();
 }
 register_activation_hook( __FILE__, 'activate_bidding_opportunity_plugin' );
 
@@ -31,7 +32,7 @@ register_activation_hook( __FILE__, 'activate_bidding_opportunity_plugin' );
  * The code that runs during plugin deactivation
  */
 function deactivate_bidding_opportunity_plugin() {
-	BIDDOP\Base\BiddopDeactivate::deactivate();
+	BIDDOP\Base\BiddopBaseController::biddopDeactivate();
 }
 register_deactivation_hook( __FILE__, 'deactivate_bidding_opportunity_plugin' );
 
