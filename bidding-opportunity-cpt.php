@@ -23,7 +23,7 @@ if ( file_exists( dirname( __FILE__ ) . '/vendor/autoload.php' ) ) {
  * The code that runs during plugin activation
  */
 function activate_bidding_opportunity_plugin() {
-	App\Base\Activate::activate();
+	App\Base\BiddoActivate::activate();
 }
 register_activation_hook( __FILE__, 'activate_bidding_opportunity_plugin' );
 
@@ -31,13 +31,13 @@ register_activation_hook( __FILE__, 'activate_bidding_opportunity_plugin' );
  * The code that runs during plugin deactivation
  */
 function deactivate_bidding_opportunity_plugin() {
-	App\Base\Deactivate::deactivate();
+	App\Base\BiddoDeactivate::deactivate();
 }
 register_deactivation_hook( __FILE__, 'deactivate_bidding_opportunity_plugin' );
 
 /**
  * The code that initialize classes needed for the plugin to work
  */
-if ( class_exists( 'App\\Init' ) ) {
-  App\Init::registerServices();
+if ( class_exists( 'App\\BiddoInit' ) ) {
+  App\BiddoInit::registerServices();
 }

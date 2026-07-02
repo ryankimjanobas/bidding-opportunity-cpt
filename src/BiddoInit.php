@@ -8,9 +8,9 @@ namespace App;
 
 defined('ABSPATH') or die('Hey, you should not be here!');
 
-if (!class_exists('Init')) {
+if (!class_exists('BiddoInit')) {
 
-	final class Init
+	final class BiddoInit
 	{
 		/**
 		 * Store all the classes inside an array
@@ -19,11 +19,11 @@ if (!class_exists('Init')) {
 		public static function services()
 		{
 			return [
-				Admin\AdminPanel::class,
-				Base\Enqueue::class,
-				Frontend\AjaxScript::class,
-				Frontend\PublicBidding::class,
-				Frontend\AlternativeMethod::class			
+				Admin\BiddoAdminPanel::class,
+				Base\BiddoEnqueue::class,
+				Frontend\BiddoAjaxScript::class,
+				Frontend\BiddoPublicBidding::class,
+				Frontend\BiddoAlternativeMethod::class			
 			];
 		}
 

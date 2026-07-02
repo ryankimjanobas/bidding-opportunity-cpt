@@ -10,11 +10,11 @@ namespace App\Base;
 
 defined('ABSPATH') or die('Hey, you should not be here!');
 
-use App\Base\BaseController;
+use App\Base\BiddoBaseController;
 
-if (!class_exists('Enqueue')) {
+if (!class_exists('BiddoEnqueue')) {
   
-  class Enqueue extends BaseController
+  class BiddoEnqueue extends BiddoBaseController
   {
     public function register()
     {

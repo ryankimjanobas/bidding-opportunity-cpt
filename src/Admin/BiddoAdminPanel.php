@@ -9,12 +9,12 @@ namespace App\Admin;
 
 defined('ABSPATH') or die('Hey, you should not be here!');
 
-use App\Base\BaseController;
+use App\Base\BiddoBaseController;
 
-if (!class_exists('AdminPanel'))
+if (!class_exists('BiddoAdminPanel'))
 {
 
-  class AdminPanel extends BaseController
+  class BiddoAdminPanel extends BiddoBaseController
   {        
     public function register()
     {

@@ -8,9 +8,9 @@ namespace App\Base;
 
 defined('ABSPATH') or die('Hey, you should not be here!');
 
-if (!class_exists('Deactivate')) {
+if (!class_exists('BiddoDeactivate')) {
 
-	class Deactivate
+	class BiddoDeactivate
 	{
 		public static function deactivate()
 		{

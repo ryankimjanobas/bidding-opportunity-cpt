@@ -10,11 +10,11 @@ namespace App\Frontend;
 
 defined('ABSPATH') or die('Hey, you should not be here!');
 
-use App\Base\BaseController;
+use App\Base\BiddoBaseController;
 
-if (!class_exists('PublicBidding')) {
+if (!class_exists('BiddoPublicBidding')) {
 
-  class PublicBidding extends BaseController
+  class BiddoPublicBidding extends BiddoBaseController
   {
     public function register()
     {      

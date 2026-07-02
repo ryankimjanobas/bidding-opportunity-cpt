@@ -10,11 +10,11 @@ namespace App\Frontend;
 
 defined('ABSPATH') or die('Hey, you should not be here!');
 
-use App\Base\BaseController;
+use App\Base\BiddoBaseController;
 
-if (!class_exists('AjaxScript')) {
+if (!class_exists('BiddoAjaxScript')) {
 
-  class AjaxScript extends BaseController
+  class BiddoAjaxScript extends BiddoBaseController
   {
     public function register()
     {

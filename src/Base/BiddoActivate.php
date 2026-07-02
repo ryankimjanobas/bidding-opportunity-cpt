@@ -8,9 +8,9 @@ namespace App\Base;
 
 defined('ABSPATH') or die('Hey, you should not be here!');
 
-if (!class_exists('Activate')) {
+if (!class_exists('BiddoActivate')) {
 
-	class Activate
+	class BiddoActivate
 	{
 		public static function activate()
 		{

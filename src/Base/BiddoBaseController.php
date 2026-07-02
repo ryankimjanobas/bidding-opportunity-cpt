@@ -8,9 +8,9 @@ namespace App\Base;
 
 defined('ABSPATH') or die('Hey, you should not be here!');
 
-if (!class_exists('BaseController')) {
+if (!class_exists('BiddoBaseController')) {
 
-	class BaseController
+	class BiddoBaseController
 	{
 		public $plugin_path;
 
@@ -31,8 +31,7 @@ if (!class_exists('BaseController')) {
 		public function __construct()
 		{
 			$this->plugin_path = plugin_dir_path(dirname(__FILE__, 2));
-			$this->plugin_url = plugin_dir_url(dirname(__FILE__, 2));
-			$this->plugin = plugin_basename(dirname(__FILE__, 3)) . '/bidding-opportunity-cpt.php';
+			$this->plugin_url = plugin_dir_url(dirname(__FILE__, 2));			
 			$this->cpt_name = 'bid_opportunity';			
 			$this->taxonomy_status = 'bid_opportunity_status';
 			$this->variable_prefix = 'bid_opportunity_cpt_';
