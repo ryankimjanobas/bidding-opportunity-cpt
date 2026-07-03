@@ -46,7 +46,7 @@ jQuery(document).ready(function($) {
         "targets": [0, 5, 6, 7, 8]
       },
       {
-        targets: [7],
+        targets: [8],
         className: 'text-center'
       }
     ],
@@ -89,7 +89,7 @@ jQuery(document).ready(function($) {
         "targets": [0, 5, 6]
       },
       {
-        targets: [9],
+        targets: [10],
         className: 'text-center'
       }
     ],
@@ -133,7 +133,7 @@ jQuery(document).ready(function($) {
         "targets": [0, 5, 6]
       },
       {
-        targets: [5],
+        targets: [6],
         className: 'text-center'
       }
     ],
@@ -174,7 +174,7 @@ jQuery(document).ready(function($) {
         "targets": [0, 5]
       },
       {
-        targets: [7],
+        targets: [8],
         className: 'text-center'
       }
     ],

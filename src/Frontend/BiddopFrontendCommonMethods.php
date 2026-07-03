@@ -178,6 +178,7 @@ if (!class_exists('BiddopFrontendCommonMethods')) {
           $publish_date = get_post_meta(get_the_ID(), $this->variable_prefix . 'key_publish_date', true) ? date('F j, Y', strtotime(get_post_meta(get_the_ID(), $this->variable_prefix . 'key_publish_date', true))) : '';
           $closing_date = get_post_meta(get_the_ID(), $this->variable_prefix . 'key_closing_date', true) ? date('F j, Y', strtotime(get_post_meta(get_the_ID(), $this->variable_prefix . 'key_closing_date', true))) : '';
           $prebid_date = get_post_meta(get_the_ID(), $this->variable_prefix . 'key_prebid_date', true) ? date('F j, Y', strtotime(get_post_meta(get_the_ID(), $this->variable_prefix . 'key_prebid_date', true))) : '';
+          $prebid_link = get_post_meta(get_the_ID(), $this->variable_prefix . 'key_prebid_link', true) ? get_post_meta(get_the_ID(), $this->variable_prefix . 'key_prebid_link', true) : '';          
           $supplier_name = get_post_meta(get_the_ID(), $this->variable_prefix . 'key_supplier_name', true) ? get_post_meta(get_the_ID(), $this->variable_prefix . 'key_supplier_name', true) : '';
           $contract_amount = get_post_meta(get_the_ID(), $this->variable_prefix . 'key_contract_amount', true) ? '₱' . number_format(get_post_meta(get_the_ID(), $this->variable_prefix . 'key_contract_amount', true), 2) : '';          
           $attachment = "<a href='" . esc_url(get_post_meta(get_the_ID(), $this->variable_prefix . 'key_attachment', true)) . "' target='_blank' title='Click to see Attachment' class='bid-opportunity-datatable-attachment-icon'>
@@ -191,6 +192,10 @@ if (!class_exists('BiddopFrontendCommonMethods')) {
               $supplemental .= "<li class='biddop-frontend-supplemental-list'><a href='" . esc_url($doc['document_link']) . "' target='_blank'>" . $doc['document_name'] . "</a></li>";
             }
           }                    
+
+          if($prebid_link) {
+            
+          }
 
           array_push($data, [            
             'counter'         => $counter++ + $offset,
