@@ -31,12 +31,12 @@ if (!class_exists('BiddopFrontendCommonMethods')) {
     }    
 
     public function biddopEnqueueFrontendScripts()
-    {
+    {      
       //datables scripts
-      wp_enqueue_script('datatables', 'https://cdn.datatables.net/2.3.8/js/dataTables.min.js', array('jquery'));
-      wp_localize_script('datatables', 'biddingopportunitydatatablesajax', ['url' => admin_url('admin-ajax.php')]);
-      wp_enqueue_style('datatables', 'https://cdn.datatables.net/2.3.8/css/dataTables.dataTables.min.css');
-
+      wp_enqueue_script($this->cpt_name . 'datatables-scripts', "$this->plugin_url/assets/DataTables/datatables.min.js", array('jquery'), '2.3.8', true);      
+      wp_localize_script($this->cpt_name . 'datatables-scripts', 'biddingopportunitydatatablesajax', ['url' => admin_url('admin-ajax.php')]);
+      wp_enqueue_style($this->cpt_name . 'datatables-scripts', "$this->plugin_url/assets/DataTables/datatables.min.css");
+      //fontend custom scripts
       wp_enqueue_script($this->cpt_name . '_scripts', "$this->plugin_url/assets/bid-opportunity-cpt-scripts.js", array('jquery'), '1.0.0', true);
       wp_enqueue_style($this->cpt_name . '_styles', "$this->plugin_url/assets/bid-opportunity-cpt-styles.css");
     }
