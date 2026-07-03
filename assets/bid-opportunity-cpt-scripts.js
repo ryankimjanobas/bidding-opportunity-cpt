@@ -31,6 +31,7 @@ jQuery(document).ready(function($) {
     columns: [        
         { data: 'counter' },
         { data: 'title' },
+        { data: 'philgeps_ref_no' },
         { data: 'abc' },
         { data: 'publish_date' },
         { data: 'closing_date' },
@@ -72,6 +73,7 @@ jQuery(document).ready(function($) {
     columns: [        
         { data: 'counter' },
         { data: 'title' },
+        { data: 'philgeps_ref_no' },
         { data: 'abc' },
         { data: 'publish_date' },
         { data: 'closing_date' },
@@ -118,6 +120,7 @@ jQuery(document).ready(function($) {
     columns: [        
         { data: 'counter' },
         { data: 'title' },
+        { data: 'philgeps_ref_no' },
         { data: 'abc' },
         { data: 'publish_date' },
         { data: 'closing_date' },       
@@ -157,6 +160,7 @@ jQuery(document).ready(function($) {
     columns: [        
         { data: 'counter' },
         { data: 'title' },
+        { data: 'philgeps_ref_no' },
         { data: 'abc' },
         { data: 'publish_date' },
         { data: 'closing_date' },

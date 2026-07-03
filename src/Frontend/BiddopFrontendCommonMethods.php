@@ -173,6 +173,7 @@ if (!class_exists('BiddopFrontendCommonMethods')) {
           $status = get_the_terms( get_the_ID(), $this->taxonomy_status );
           
           $title = get_post_meta(get_the_ID(), $this->variable_prefix . 'key_title', true) ? get_post_meta(get_the_ID(), $this->variable_prefix . 'key_title', true) : '';
+          $philgeps_ref_no = get_post_meta(get_the_ID(), $this->variable_prefix . 'key_philgeps_registration_no', true) ? get_post_meta(get_the_ID(), $this->variable_prefix . 'key_philgeps_registration_no', true) : '';
           $abc = get_post_meta(get_the_ID(), $this->variable_prefix . 'key_abc', true) ? '₱' . number_format(get_post_meta(get_the_ID(), $this->variable_prefix . 'key_abc', true), 2) : '';
           $publish_date = get_post_meta(get_the_ID(), $this->variable_prefix . 'key_publish_date', true) ? date('F j, Y', strtotime(get_post_meta(get_the_ID(), $this->variable_prefix . 'key_publish_date', true))) : '';
           $closing_date = get_post_meta(get_the_ID(), $this->variable_prefix . 'key_closing_date', true) ? date('F j, Y', strtotime(get_post_meta(get_the_ID(), $this->variable_prefix . 'key_closing_date', true))) : '';
@@ -194,6 +195,7 @@ if (!class_exists('BiddopFrontendCommonMethods')) {
           array_push($data, [            
             'counter'         => $counter++ + $offset,
             'title'           => $title,
+            'philgeps_ref_no' => $philgeps_ref_no,
             'abc'             => $abc,
             'publish_date'    => $publish_date,
             'closing_date'    => $closing_date,

@@ -58,6 +58,7 @@ if (!class_exists('BiddopPublicBidding')) {
             <tr>
               <th width='20'>#</th>
               <th>Title</th>
+              <th>Philgeps Ref No</th>
               <th>ABC</th>
               <th>Publish Date</th>
               <th>Closing Date</th>
@@ -107,6 +108,7 @@ if (!class_exists('BiddopPublicBidding')) {
             <tr>
               <th width='20'>#</th>
               <th>Title</th>
+              <th>Philgeps Ref No</th>
               <th>ABC</th>
               <th>Publish Date</th>
               <th>Closing Date</th>
