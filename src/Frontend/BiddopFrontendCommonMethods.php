@@ -187,7 +187,7 @@ if (!class_exists('BiddopFrontendCommonMethods')) {
           $supplemental = '';
           if(!empty($supplemental_docs)) {
             foreach ($supplemental_docs as $doc) {
-              $supplemental .= "<a href='" . esc_url($doc['document_link']) . "' target='_blank' style='display:block;font-size:14px;'>" . $doc['document_name'] . "</a>";
+              $supplemental .= "<li class='biddop-frontend-supplemental-list'><a href='" . esc_url($doc['document_link']) . "' target='_blank'>" . $doc['document_name'] . "</a></li>";
             }
           }                    
 

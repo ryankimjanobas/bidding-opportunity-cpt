@@ -94,6 +94,18 @@ table.dataTable tr{
   filter: invert(30%) sepia(83%) saturate(2440%) hue-rotate(212deg) brightness(101%) contrast(96%)
 }
 
+.bid-opportunity-datatable-attachment-icon:hover {
+  filter: invert(38%) sepia(81%) saturate(4393%) hue-rotate(143deg) brightness(90%) contrast(105%)
+}
+
+.biddop-frontend-supplemental-list {  
+  font-size: 13px;
+}
+
+.biddop-frontend-supplemental-list:hover a {
+  color: #059058;  
+}
+
  /* DataTables override styles */
 .bid-opportunity-cpt-datatable-container
 .bid-opportunity-status-active {
