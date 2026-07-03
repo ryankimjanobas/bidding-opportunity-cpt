@@ -192,9 +192,9 @@ if (!class_exists('BiddopFrontendCommonMethods')) {
               $supplemental .= "<li class='biddop-frontend-supplemental-list'><a href='" . esc_url($doc['document_link']) . "' target='_blank'>" . $doc['document_name'] . "</a></li>";
             }
           }                    
-
+          $formatted_prebid_link = '';
           if($prebid_link) {
-            
+            $formatted_prebid_link .= "<br><a href='" . esc_url($prebid_link) . "' target='_blank' title='" . $prebid_link . "'><span class='biddop-frontend-prebid-link-exerp'>" . $prebid_link . "</span></a>";
           }
 
           array_push($data, [            
@@ -204,7 +204,7 @@ if (!class_exists('BiddopFrontendCommonMethods')) {
             'abc'             => $abc,
             'publish_date'    => $publish_date,
             'closing_date'    => $closing_date,
-            'prebid_date'     => $prebid_date,
+            'prebid_date'     => $prebid_date . $formatted_prebid_link,
             'supplemental'    => $supplemental,
             'supplier_name'   => $supplier_name,
             'contract_amount' => $contract_amount,

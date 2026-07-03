@@ -76,3 +76,11 @@ table.dataTable tr{
 .bid-opportunity-status-default {
   color: #50575e
 }
+
+.biddop-frontend-prebid-link-exerp {
+  display: block;
+  width: 100px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;   
+}
