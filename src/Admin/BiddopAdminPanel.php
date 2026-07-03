@@ -750,24 +750,24 @@ if (!class_exists('BiddopAdminPanel'))
         // Ensure this runs only in the admin dashboard panel on the main list query
         if ( ! is_admin() || ! $query->is_main_query() ) {
           return;
-        }
-
-        $custom_sortable_columns = array(
-          $this->variable_prefix . 'key_title' => 'meta_value',
-          $this->variable_prefix . 'key_abc' => 'meta_value_num',
-          $this->variable_prefix . 'key_closing_date' => 'meta_value',
-          $this->variable_prefix . 'key_publish_date' => 'meta_value',
-          $this->variable_prefix . 'key_mode' => 'meta_value',
-          $this->variable_prefix . 'key_prebid_date' => 'meta_value'
-        );
-        
-        $custom_sortable_date_columns = array(
-          $this->variable_prefix . 'key_closing_date',
-          $this->variable_prefix . 'key_publish_date',
-          $this->variable_prefix . 'key_prebid_date'
-        );
-        
-        if($typenow == $this->cpt_name && $query->get( 'orderby' )) {         
+        }        
+        //on ly run if page is in this custom post type and orderby is not null
+        if($typenow == $this->cpt_name && $query->get( 'orderby' )) {
+          
+          $custom_sortable_columns = array(
+            $this->variable_prefix . 'key_title' => 'meta_value',
+            $this->variable_prefix . 'key_abc' => 'meta_value_num',
+            $this->variable_prefix . 'key_closing_date' => 'meta_value',
+            $this->variable_prefix . 'key_publish_date' => 'meta_value',
+            $this->variable_prefix . 'key_mode' => 'meta_value',
+            $this->variable_prefix . 'key_prebid_date' => 'meta_value'
+          );
+          
+          $custom_sortable_date_columns = array(
+            $this->variable_prefix . 'key_closing_date',
+            $this->variable_prefix . 'key_publish_date',
+            $this->variable_prefix . 'key_prebid_date'
+          );
           
           if(array_key_exists($query->get( 'orderby' ), $custom_sortable_columns)) {
             
