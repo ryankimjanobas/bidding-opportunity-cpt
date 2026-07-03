@@ -568,6 +568,7 @@ if (!class_exists('BiddopAdminPanel'))
       $columns = array(
         "cb" => "<input type='checkbox'/>",
         "bo_title" => "Title",
+        "bo_philgeps_ref_no" => "Philgeps Ref #",
         "bo_abc" => "ABC",
         "bo_publish_date" => "Publish Date",
         "bo_closing_date" => "Closing Date",
@@ -645,9 +646,12 @@ if (!class_exists('BiddopAdminPanel'))
     public function biddopCptCustomTableColumnsData($column, $post_id)
     {     
       switch ($column) {
-
+        
         case "bo_title":
           echo get_post_meta($post_id, $this->variable_prefix . "key_title", true);
+          break;
+        case "bo_philgeps_ref_no":
+          echo get_post_meta($post_id, $this->variable_prefix . "key_philgeps_registration_no", true);
           break;
         case "bo_abc":
           echo get_post_meta($post_id, $this->variable_prefix . "key_abc", true) ? '₱' . number_format(get_post_meta($post_id, $this->variable_prefix . "key_abc", true), 2) : '';
