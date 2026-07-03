@@ -84,3 +84,11 @@
 .biddop-admin-link:hover a {
   color: #059058;  
 }
+
+.biddop-admin-link-exerp {
+  display: block;
+  width: 120px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;   
+}

@@ -671,7 +671,7 @@ if (!class_exists('BiddopAdminPanel'))
           echo $prebid_date;
 
           if($prebid_link) {
-            echo "<div class='biddop-admin-link'><a href='" . esc_url($prebid_link) . "' target='_blank'>" . $prebid_link . "</div>";
+            echo "<div class='biddop-admin-link'><a href='" . esc_url($prebid_link) . "' target='_blank'><span class='biddop-admin-link-exerp'>" . $prebid_link . "</span></div>";
           }
 
           break;        
