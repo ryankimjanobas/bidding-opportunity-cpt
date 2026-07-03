@@ -234,18 +234,17 @@ if (!class_exists('BiddopAdminPanel'))
       if($supplemental) {
         update_post_meta($post->ID, $this->variable_prefix . "key_supplemental_document", 'Sample supplemental dsadasds');
       }
-      
-      
+            
       ?>
       
       <div>
-        <h4><label class='required-field-label'>Philgeps Registration no:</label></h4>        
+        <h4><label class='required-field-label'>Philgeps Reference no:</label></h4>        
         <input
           class='bidding-opportunity-admin-input'
           type='text'
           value='<?php echo $philgeps_reg_no; ?>'
           name='<?php echo $this->variable_prefix; ?>philgeps_registration_no'
-          placeholder="Philgep's registration number" required
+          placeholder="Philgep's reference number" required
         />
       </div>
 
