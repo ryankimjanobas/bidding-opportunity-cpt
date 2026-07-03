@@ -23,11 +23,11 @@ if (!class_exists('BiddopAlternativeMethod')) {
 
     public function initShortcode()
     {      
-      add_shortcode('bidding_opportunity_alternative_method_datatable', array($this, 'alternativeMethodDatatableShortcode'));
-      add_shortcode('bidding_opportunity_alternative_method_awarded_datatable', array($this, 'alternativeMethodTransparencyDatatableShortcode'));
+      add_shortcode('bidding_opportunity_alternative_method_datatable', array($this, 'biddopAlternativeMethodDatatableShortcode'));
+      add_shortcode('bidding_opportunity_alternative_method_awarded_datatable', array($this, 'biddopAlternativeMethodTransparencyDatatableShortcode'));
     }
     
-    public function alternativeMethodDatatableShortcode()
+    public function biddopAlternativeMethodDatatableShortcode()
     {
 
     ?>     
@@ -73,7 +73,7 @@ if (!class_exists('BiddopAlternativeMethod')) {
 
     }
 
-    public function alternativeMethodTransparencyDatatableShortcode()
+    public function biddopAlternativeMethodTransparencyDatatableShortcode()
     {
 
     ?>     

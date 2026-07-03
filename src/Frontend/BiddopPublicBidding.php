@@ -23,11 +23,11 @@ if (!class_exists('BiddopPublicBidding')) {
 
     public function initShortcode()
     {      
-      add_shortcode('bidding_opportunity_public_bidding_datatable', array($this, 'publicBiddingDatatableShortcode'));
-      add_shortcode('bidding_opportunity_public_bidding_awarded_datatable', array($this, 'publicBiddingTransparencyDatatableShortcode'));
+      add_shortcode('bidding_opportunity_public_bidding_datatable', array($this, 'biddopPublicBiddingDatatableShortcode'));
+      add_shortcode('bidding_opportunity_public_bidding_awarded_datatable', array($this, 'biddopPublicBiddingTransparencyDatatableShortcode'));
     }
     
-    public function publicBiddingDatatableShortcode()
+    public function biddopPublicBiddingDatatableShortcode()
     {
      
     ?>     
@@ -75,7 +75,7 @@ if (!class_exists('BiddopPublicBidding')) {
 
     }
 
-    public function publicBiddingTransparencyDatatableShortcode()
+    public function biddopPublicBiddingTransparencyDatatableShortcode()
     {
 
     ?>     
