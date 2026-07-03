@@ -16,7 +16,7 @@ if (!class_exists('BiddopAlternativeMethod')) {
 
   class BiddopAlternativeMethod extends BiddopBaseController
   {
-    public function register()
+    public function biddopRegister()
     {      
       $this->initShortcode();
     }

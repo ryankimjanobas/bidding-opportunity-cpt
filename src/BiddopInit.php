@@ -35,8 +35,8 @@ if (!class_exists('BiddopInit')) {
 		{
 			foreach (self::services() as $class) {
 				$service = self::instantiate($class);
-				if (method_exists($service, 'register')) {
-					$service->register();
+				if (method_exists($service, 'biddopRegister')) {
+					$service->biddopRegister();
 				}
 			}
 		}

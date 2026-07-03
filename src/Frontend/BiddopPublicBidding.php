@@ -16,7 +16,7 @@ if (!class_exists('BiddopPublicBidding')) {
 
   class BiddopPublicBidding extends BiddopBaseController
   {
-    public function register()
+    public function biddopRegister()
     {      
       $this->initShortcode();
     }

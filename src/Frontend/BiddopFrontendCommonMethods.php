@@ -16,7 +16,7 @@ if (!class_exists('BiddopFrontendCommonMethods')) {
 
   class BiddopFrontendCommonMethods extends BiddopBaseController
   {
-    public function register()
+    public function biddopRegister()
     {
       /* 
       *Enqueue scripts for frontend

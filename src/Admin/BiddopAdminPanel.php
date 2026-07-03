@@ -16,7 +16,7 @@ if (!class_exists('BiddopAdminPanel'))
 
   class BiddopAdminPanel extends BiddopBaseController
   {        
-    public function register()
+    public function biddopRegister()
     {
       /* 
       * Register all services neeeded for the plugin to work 
