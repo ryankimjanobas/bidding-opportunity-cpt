@@ -25,8 +25,8 @@ if (!class_exists('BiddopFrontendCommonMethods')) {
       /* 
       * Register ajax endpoint
       */
-      add_action('wp_ajax_bid_opportunity_datatable', array($this, 'bidOpportunityDatatable'));
-      add_action('wp_ajax_nopriv_bid_opportunity_datatable', array($this, 'bidOpportunityDatatable'));      
+      add_action('wp_ajax_bid_opportunity_datatable', array($this, 'biddopFrontendAjaxEndpoint'));
+      add_action('wp_ajax_nopriv_bid_opportunity_datatable', array($this, 'biddopFrontendAjaxEndpoint'));      
 
     }    
 
@@ -41,7 +41,7 @@ if (!class_exists('BiddopFrontendCommonMethods')) {
       wp_enqueue_style($this->cpt_name . '_styles', "$this->plugin_url/assets/bid-opportunity-cpt-styles.css");
     }
 
-    public function bidOpportunityDatatable()
+    public function biddopFrontendAjaxEndpoint()
     {
 
     /*
