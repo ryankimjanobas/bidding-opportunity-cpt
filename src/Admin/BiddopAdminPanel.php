@@ -224,17 +224,12 @@ if (!class_exists('BiddopAdminPanel'))
       $publish_date = get_post_meta($post->ID, $this->variable_prefix . "key_publish_date", true);
       $closing_date = get_post_meta($post->ID, $this->variable_prefix . "key_closing_date", true);
       $prebid_date = get_post_meta($post->ID, $this->variable_prefix . "key_prebid_date", true);
+      $prebid_link = get_post_meta($post->ID, $this->variable_prefix . "key_prebid_link", true);
       $supplemental_documents = get_post_meta($post->ID, $this->variable_prefix . "key_supplemental_documents", true);
       $bid_docs = get_post_meta($post->ID, $this->variable_prefix . "key_attachment", true);
       $supplier_name = get_post_meta($post->ID, $this->variable_prefix . "key_supplier_name", true);
       $contract_amount = get_post_meta($post->ID, $this->variable_prefix . "key_contract_amount", true);                  
-
-      $supplemental = get_post_meta($post->ID, $this->variable_prefix . "key_supplemental_document", true);
-
-      if($supplemental) {
-        update_post_meta($post->ID, $this->variable_prefix . "key_supplemental_document", 'Sample supplemental dsadasds');
-      }
-            
+                  
       ?>
       
       <div>
@@ -244,7 +239,7 @@ if (!class_exists('BiddopAdminPanel'))
           type='text'
           value='<?php echo $philgeps_reg_no; ?>'
           name='<?php echo $this->variable_prefix; ?>philgeps_registration_no'
-          placeholder="Philgep's reference number" required
+          placeholder="Philgeps reference number" required
         />
       </div>
 
@@ -314,15 +309,32 @@ if (!class_exists('BiddopAdminPanel'))
       </div>
 
       <div id='conditional_render_container' class='<?php echo $mode !== 'public' ? "hidden" : ""; ?>'>
-        <div>
-          <h4><label>Prebid Date:</label></h4>          
-          <input
-            class="bidding-opportunity-admin-input"
-            type="date"
-            value="<?php echo $prebid_date; ?>"
-            name="<?php echo $this->variable_prefix; ?>prebid_date"
-          />
+        <div style="border:1px solid rgba(0,0,0,0.3);margin:10px 0;padding: 10px;border-radius:5px;">
+          <label style="color: rgba(0,0,0,0.6);font-style: italic;">Prebid Details</label>
+          <div style="display: grid; grid-template-columns: 1fr 1fr;gap: 10px;margin-top:-10px;">
+            <div>
+              <h4><label>Prebid Date:</label></h4>          
+              <input
+                class="bidding-opportunity-admin-input"
+                type="date"
+                value="<?php echo $prebid_date; ?>"
+                name="<?php echo $this->variable_prefix; ?>prebid_date"
+              />
+            </div>
+            <div>
+              <h4><label>Prebid Document Link:</label></h4>          
+              <input
+                class="bidding-opportunity-admin-input"
+                type="text"
+                value="<?php echo $prebid_link; ?>"
+                name="<?php echo $this->variable_prefix; ?>prebid_link"
+                placeholder="Link of Prebid Document"
+              />
+            </div>
+          </div>
+          
         </div>
+        
         <div class="bidding-opportunity-supplemental-container" style="border:1px solid rgba(0,0,0,0.3);margin:10px 0;padding: 10px;border-radius:5px;">          
           <input type="hidden" name="<?php echo $this->variable_prefix; ?>supplemental_documents" value='<?php echo $supplemental_documents; ?>'>          
           <h4><label>Supplemental Document(s):</label></h4>
@@ -372,7 +384,7 @@ if (!class_exists('BiddopAdminPanel'))
                 class="bidding-opportunity-admin-input"
                 type="text"
                 value=""                
-                placeholder="Link of Document"
+                placeholder="Link of supplemental Document"
                 id="supplemental_documents_document_link"
               />
             </div>
@@ -506,6 +518,7 @@ if (!class_exists('BiddopAdminPanel'))
       $attachment = isset($_POST[$this->variable_prefix . 'attachment']) ? sanitize_url($_POST[$this->variable_prefix . 'attachment']) : "";            
       $mode = isset($_POST[$this->variable_prefix . 'mode']) ? sanitize_text_field($_POST[$this->variable_prefix . 'mode']) : "";
       $prebid_date = isset($_POST[$this->variable_prefix . 'prebid_date']) ? sanitize_text_field($_POST[$this->variable_prefix . 'prebid_date']) : "";
+      $prebid_link = isset($_POST[$this->variable_prefix . 'prebid_link']) ? sanitize_text_field($_POST[$this->variable_prefix . 'prebid_link']) : "";
       $supplemental_documents = isset($_POST[$this->variable_prefix . 'supplemental_documents']) ? sanitize_text_field($_POST[$this->variable_prefix . 'supplemental_documents']) : "";      
       $supplier_name = isset($_POST[$this->variable_prefix . 'supplier_name']) ? sanitize_text_field($_POST[$this->variable_prefix . 'supplier_name']) : "";
       $contract_amount = isset($_POST[$this->variable_prefix . 'contract_amount']) ? sanitize_text_field($_POST[$this->variable_prefix . 'contract_amount']) : "";       
@@ -518,6 +531,7 @@ if (!class_exists('BiddopAdminPanel'))
       update_post_meta($post_id, $this->variable_prefix . "key_attachment", $attachment);      
       update_post_meta($post_id, $this->variable_prefix . "key_mode", $mode);
       update_post_meta($post_id, $this->variable_prefix . "key_prebid_date", $prebid_date);
+      update_post_meta($post_id, $this->variable_prefix . "key_prebid_link", $prebid_link);
       update_post_meta($post_id, $this->variable_prefix . "key_supplemental_documents", $supplemental_documents);
       update_post_meta($post_id, $this->variable_prefix . "key_supplier_name", $supplier_name);
       update_post_meta($post_id, $this->variable_prefix . "key_contract_amount", $contract_amount);
