@@ -663,8 +663,15 @@ if (!class_exists('BiddopAdminPanel'))
           echo date('F j, Y', strtotime(get_post_meta($post_id, $this->variable_prefix . "key_closing_date", true)));
           break;
         case "bo_prebid_date":
+          $prebid_link = get_post_meta($post_id, $this->variable_prefix . "key_prebid_link", true);
           $prebid_date = get_post_meta($post_id, $this->variable_prefix . "key_prebid_date", true) ? date('F j, Y', strtotime(get_post_meta($post_id, $this->variable_prefix . "key_prebid_date", true))) : '';
+          
           echo $prebid_date;
+
+          if($prebid_link) {
+            echo "<div class='biddop-admin-link'><a href='" . esc_url($prebid_link) . "' target='_blank'>" . $prebid_link . "</div>";
+          }
+
           break;        
         case "bo_status":
           $term = get_the_terms($post_id, $this->taxonomy_status);
@@ -702,7 +709,7 @@ if (!class_exists('BiddopAdminPanel'))
                 $supplemental_documents .= "<span style='font-size:12px'>Supplemental document(s):</span>";
                 //loop for each document
                 foreach ($documents_array as $document) {
-                  $supplemental_documents .= "<br><a href='" . esc_url($document['document_link']) . "' target='_blank'>" . $document['document_name'] . "</a>";
+                  $supplemental_documents .= "<div><li class='biddop-admin-supplemental-list biddop-admin-link'><a href='" . esc_url($document['document_link']) . "' target='_blank'>" . $document['document_name'] . "</a></li></div>";
                 }
 
                 $supplemental_documents .= "</div>";                
@@ -720,9 +727,11 @@ if (!class_exists('BiddopAdminPanel'))
           break;
         case "bo_attachment":         
           ?>
-          <a href="<?php echo esc_url(get_post_meta($post_id, $this->variable_prefix . "key_attachment", true)); ?>" target="_blank" rel="noopener noreferrer">            
-            <span class="dashicons dashicons-external"></span>
-          </a>
+          <span class='biddop-admin-link'>
+            <a href="<?php echo esc_url(get_post_meta($post_id, $this->variable_prefix . "key_attachment", true)); ?>" target="_blank" rel="noopener noreferrer">            
+              <span class="dashicons dashicons-external"></span>
+            </a>
+          </span>
         <?php
           break;
         default: 

@@ -75,3 +75,12 @@
 #bidding-opportunity-supplemental-warning {
   color: red;
 }
+
+.biddop-admin-supplemental-list {  
+  font-size: 13px;
+  margin-left: 15px;
+}
+
+.biddop-admin-link:hover a {
+  color: #059058;  
+}
