@@ -32,7 +32,7 @@ if (!class_exists('BiddopInit')) {
 		 * and call the register() method if it exists
 		 * @return
 		 */
-		public static function registerServices()
+		public static function biddopRegisterServices()
 		{
 			foreach (self::services() as $class) {
 				$service = self::instantiate($class);

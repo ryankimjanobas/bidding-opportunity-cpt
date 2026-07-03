@@ -40,5 +40,5 @@ register_deactivation_hook( __FILE__, 'deactivate_bidding_opportunity_plugin' );
  * The code that initialize classes needed for the plugin to work
  */
 if ( class_exists( 'BIDDOP\\BiddopInit' ) ) {
-  BIDDOP\BiddopInit::registerServices();
+  BIDDOP\BiddopInit::biddopRegisterServices();
 }
