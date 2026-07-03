@@ -36,7 +36,9 @@ if (!class_exists('BiddopAdminPanel'))
 
       add_action('manage_' . $this->cpt_name . '_posts_custom_column', array($this, 'biddopCptCustomTableColumnsData'), 10, 2);
 
-      add_filter('manage_edit-' . $this->cpt_name . '_sortable_columns', array($this, 'biddopCptCustomSortableColumns'));      
+      add_filter('manage_edit-' . $this->cpt_name . '_sortable_columns', array($this, 'biddopCptCustomSortableColumns'));
+      
+      add_action('pre_get_posts', array($this, 'biddoHandleSortingOfCustomColumns'));
 
       add_action("restrict_manage_posts", array($this, 'biddopStatusFilterBox'));
 
@@ -585,13 +587,13 @@ if (!class_exists('BiddopAdminPanel'))
     * Make custom columns sortable on admin panel 
     */
     public function biddopCptCustomSortableColumns($columns)
-    {            
-      $columns['bo_title'] = "title";
-      $columns['bo_abc'] = "abc";
-      $columns['bo_closing_date'] = "closing-date";
-      $columns['bo_publish_date'] = "publish-date";
-      $columns['bo_mode'] = "mode-of-procurement";
-      $columns['bo_prebid_date'] = "prebid-date";
+    {               
+      $columns['bo_title']        = $this->variable_prefix . "key_title";
+      $columns['bo_abc']          = $this->variable_prefix . "key_abc";
+      $columns['bo_closing_date'] = $this->variable_prefix . "key_closing_date";
+      $columns['bo_publish_date'] = $this->variable_prefix . "key_publish_date";
+      $columns['bo_mode']         = $this->variable_prefix . "key_mode";
+      $columns['bo_prebid_date']  = $this->variable_prefix . "key_prebid_date";
 
       return $columns;
     }
@@ -738,5 +740,47 @@ if (!class_exists('BiddopAdminPanel'))
           break;
       }
     }       
+    /* 
+    * handles the sorting of custom columns
+    */
+    public function biddoHandleSortingOfCustomColumns( $query ) {
+
+      global $typenow;
+       
+        // Ensure this runs only in the admin dashboard panel on the main list query
+        if ( ! is_admin() || ! $query->is_main_query() ) {
+          return;
+        }
+
+        $custom_sortable_columns = array(
+          $this->variable_prefix . 'key_title' => 'meta_value',
+          $this->variable_prefix . 'key_abc' => 'meta_value_num',
+          $this->variable_prefix . 'key_closing_date' => 'meta_value',
+          $this->variable_prefix . 'key_publish_date' => 'meta_value',
+          $this->variable_prefix . 'key_mode' => 'meta_value',
+          $this->variable_prefix . 'key_prebid_date' => 'meta_value'
+        );
+        
+        $custom_sortable_date_columns = array(
+          $this->variable_prefix . 'key_closing_date',
+          $this->variable_prefix . 'key_publish_date',
+          $this->variable_prefix . 'key_prebid_date'
+        );
+        
+        if($typenow == $this->cpt_name && $query->get( 'orderby' )) {         
+          
+          if(array_key_exists($query->get( 'orderby' ), $custom_sortable_columns)) {
+            
+            $query->set( 'meta_key', $query->get( 'orderby' ) );
+            $query->set( 'orderby', $custom_sortable_columns[$query->get( 'orderby' )] );
+            //add meta type if sort by date column
+            if(in_array($query->get( 'orderby' ), $custom_sortable_date_columns)) {
+              $query->set( 'meta_type', 'DATE' );
+            }            
+
+          }          
+        }
+        
+    }
   }    
 }
