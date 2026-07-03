@@ -12,15 +12,34 @@ defined('ABSPATH') or die('Hey, you should not be here!');
 
 use BIDDOP\Base\BiddopBaseController;
 
-if (!class_exists('BiddopAjaxScript')) {
+if (!class_exists('BiddopFrontendCommonMethods')) {
 
-  class BiddopAjaxScript extends BiddopBaseController
+  class BiddopFrontendCommonMethods extends BiddopBaseController
   {
     public function register()
     {
+      /* 
+      *Enqueue scripts for frontend
+      */
+      add_action('wp_enqueue_scripts', array($this, 'biddopEnqueueFrontendScripts'));
+      /* 
+      * Register ajax endpoint
+      */
       add_action('wp_ajax_bid_opportunity_datatable', array($this, 'bidOpportunityDatatable'));
       add_action('wp_ajax_nopriv_bid_opportunity_datatable', array($this, 'bidOpportunityDatatable'));      
+
     }    
+
+    public function biddopEnqueueFrontendScripts()
+    {
+      //datables scripts
+      wp_enqueue_script('datatables', 'https://cdn.datatables.net/2.3.8/js/dataTables.min.js', array('jquery'));
+      wp_localize_script('datatables', 'biddingopportunitydatatablesajax', ['url' => admin_url('admin-ajax.php')]);
+      wp_enqueue_style('datatables', 'https://cdn.datatables.net/2.3.8/css/dataTables.dataTables.min.css');
+
+      wp_enqueue_script($this->cpt_name . '_scripts', "$this->plugin_url/assets/bid-opportunity-cpt-scripts.js", array('jquery'), '1.0.0', true);
+      wp_enqueue_style($this->cpt_name . '_styles', "$this->plugin_url/assets/bid-opportunity-cpt-styles.css");
+    }
 
     public function bidOpportunityDatatable()
     {

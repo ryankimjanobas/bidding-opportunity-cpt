@@ -20,8 +20,7 @@ if (!class_exists('BiddopInit')) {
 		{
 			return [
 				Admin\BiddopAdminPanel::class,
-				Base\BiddopEnqueue::class,
-				Frontend\BiddopAjaxScript::class,
+				Frontend\BiddopFrontendCommonMethods::class,
 				Frontend\BiddopPublicBidding::class,
 				Frontend\BiddopAlternativeMethod::class			
 			];
