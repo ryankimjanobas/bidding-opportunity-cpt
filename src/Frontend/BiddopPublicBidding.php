@@ -53,7 +53,7 @@ if (!class_exists('BiddopPublicBidding')) {
           </div>  
         </div>
               
-        <table id='bid-opportunity-cpt-public-bidding-table' class='bid-opportunity-cpt-datatable'>
+        <table id='bid-opportunity-cpt-public-bidding-table' class='bid-opportunity-cpt-datatable hover stripe'>
           <thead>
             <tr>
               <th width='20'>#</th>
@@ -102,7 +102,7 @@ if (!class_exists('BiddopPublicBidding')) {
           </div>  
         </div>
 
-        <table id='bid-opportunity-cpt-public-bidding-transparency-table' class='bid-opportunity-cpt-datatable'>
+        <table id='bid-opportunity-cpt-public-bidding-transparency-table' class='bid-opportunity-cpt-datatable hover stripe'>
           <thead>
             <tr>
               <th width='20'>#</th>

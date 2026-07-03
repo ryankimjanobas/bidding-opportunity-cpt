@@ -53,7 +53,7 @@ if (!class_exists('BiddopAlternativeMethod')) {
           </div>  
         </div>
         
-        <table id='bid-opportunity-cpt-alternative-method-table' class='bid-opportunity-cpt-datatable'>
+        <table id='bid-opportunity-cpt-alternative-method-table' class='bid-opportunity-cpt-datatable hover stripe'>
           <thead>
             <tr>
               <th width='20'>#</th>
@@ -98,7 +98,7 @@ if (!class_exists('BiddopAlternativeMethod')) {
             </select>
           </div>  
         </div>        
-        <table id='bid-opportunity-cpt-alternative-method-transparency-table' class='bid-opportunity-cpt-datatable'>
+        <table id='bid-opportunity-cpt-alternative-method-transparency-table' class='bid-opportunity-cpt-datatable hover stripe'>
           <thead>
             <tr>
               <th width='20'>#</th>
