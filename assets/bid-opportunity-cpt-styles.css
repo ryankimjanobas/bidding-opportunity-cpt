@@ -78,9 +78,10 @@ table.dataTable tr{
 }
 
 .biddop-frontend-prebid-link-exerp {
-  display: block;
-  width: 100px;
+  display: inline-block;
+  max-width: 140px;
   white-space: nowrap;
   overflow: hidden;
-  text-overflow: ellipsis;   
+  text-overflow: ellipsis;
+  word-break: break-all;
 }
