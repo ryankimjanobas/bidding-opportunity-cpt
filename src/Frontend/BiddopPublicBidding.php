@@ -62,7 +62,7 @@ if (!class_exists('BiddopPublicBidding')) {
               <th>ABC</th>
               <th>Publish Date</th>
               <th>Closing Date</th>
-              <th style="min-width:100px;">Pre-bid Date</th>
+              <th style="min-width:100px;max-width:120px;">Pre-bid Date</th>
               <th>Supplemental</th>
               <th>Attachment</th>
               <th>Status</th>        
