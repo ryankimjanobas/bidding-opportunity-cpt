@@ -52,7 +52,7 @@ if (!class_exists('BiddopFrontendCommonMethods')) {
       $posts_per_page = $request['length'];
       $offset = $request['start'];
       $orderBy = $request['order'][0]['column'];
-      $orderDir = $request['order'][0]['dir'];
+      $orderDir = $request['order'][0]['dir'] ?? 'desc';
       $search = $request['search']['value'];
       $page_identifier = $request['identifier'];
       $year_publish_filter = $request['year_publish_filter'];
@@ -62,7 +62,7 @@ if (!class_exists('BiddopFrontendCommonMethods')) {
         2 => 'order_by_abc',
         3 => 'order_by_publish_date',
         4 => 'order_by_closing_date',
-        0 => 'modified' //default order by last modified
+        0 => 'order_by_publish_date' //default order
       );
       
       $meta_query_value = 'public';
