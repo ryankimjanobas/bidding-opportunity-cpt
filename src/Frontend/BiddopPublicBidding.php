@@ -57,12 +57,12 @@ if (!class_exists('BiddopPublicBidding')) {
           <thead>
             <tr>
               <th width='20'>#</th>
-              <th style="min-width:300px;">Title</th>
+              <th style="min-width:280px;">Title</th>
               <th>Philgeps Ref No</th>
               <th>ABC</th>
               <th>Publish Date</th>
               <th>Closing Date</th>
-              <th class="pre-bid-date-td">Pre-bid Date</th>
+              <th>Pre-bid Date</th>
               <th>Supplemental</th>
               <th>Attachment</th>
               <th>Status</th>        
@@ -107,7 +107,7 @@ if (!class_exists('BiddopPublicBidding')) {
           <thead>
             <tr>
               <th width='20'>#</th>
-              <th style="min-width:300px;">Title</th>
+              <th style="min-width:280px;">Title</th>
               <th>Philgeps Ref No</th>
               <th>ABC</th>
               <th>Publish Date</th>

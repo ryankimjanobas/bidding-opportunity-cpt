@@ -79,7 +79,7 @@ table.dataTable tr{
 
 .biddop-frontend-prebid-link-exerp {
   display: inline-block;
-  max-width: 140px;
+  max-width: 100px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
