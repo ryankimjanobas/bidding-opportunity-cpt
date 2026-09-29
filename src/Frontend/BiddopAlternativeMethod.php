@@ -46,7 +46,7 @@ if (!class_exists('BiddopAlternativeMethod')) {
                 $year_start  = $year_end - 5;                     
 
                 for ($year = $year_end; $year >= $year_start; $year--) {         
-                  echo '<option value="'. $year .'">'. $year .'</option>';
+                  echo '<option value="'. $year .'" ' . ($year === $year_end ? "selected" : '') . ' >'. $year .'</option>';
                 }               
               ?>
             </select>
@@ -93,7 +93,7 @@ if (!class_exists('BiddopAlternativeMethod')) {
                 $year_start  = $year_end - 5;                     
 
                 for ($year = $year_end; $year >= $year_start; $year--) {         
-                  echo '<option value="'. $year .'">'. $year .'</option>';
+                  echo '<option value="'. $year .'" ' . ($year === $year_end ? "selected" : '') . ' >'. $year .'</option>';
                 }               
               ?>
             </select>
