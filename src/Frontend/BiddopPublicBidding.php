@@ -29,6 +29,7 @@ if (!class_exists('BiddopPublicBidding')) {
     
     public function biddopPublicBiddingDatatableShortcode()
     {
+      $this->biddopEnqueueFrontendAssets();
      
     ?>     
 
@@ -78,6 +79,7 @@ if (!class_exists('BiddopPublicBidding')) {
 
     public function biddopPublicBiddingTransparencyDatatableShortcode()
     {
+      $this->biddopEnqueueFrontendAssets();
 
     ?>     
 

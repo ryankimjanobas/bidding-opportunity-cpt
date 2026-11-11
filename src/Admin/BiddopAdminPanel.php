@@ -28,6 +28,8 @@ if (!class_exists('BiddopAdminPanel'))
 
       add_action('init', array($this, 'biddopAutoUpdateBidsStatus'));      
 
+      add_action('init', array($this, 'biddopMaybeFlushRewriteRules'), 20);
+
       add_action( 'registered_taxonomy', array($this, 'biddopInsertRequiredStatus'), 10, 3 );
 
       add_action("save_post", array($this, 'biddopCptSaveValues'), 10, 2);                        
@@ -175,24 +177,51 @@ if (!class_exists('BiddopAdminPanel'))
           'hide_empty' => false,
         ));          
 
+        if (is_wp_error($status_taxonimies) || empty($status_taxonimies)) {
+          wp_reset_postdata();
+          return;
+        }
+
         //retrieved status slug close
         $close = array_values(array_filter($status_taxonimies, function($obj) {
           return $obj->slug === 'close';              
         }));                
 
+        //bail out if the close term does not exist
+        if (empty($close)) {
+          wp_reset_postdata();
+          return;
+        }
+
         $close_id = $close[0]->term_id;                             
 
+        /*
+         * Passing false replaces the current status term with Close (same
+         * behaviour as before). The display layer also picks the most relevant
+         * status if a bid happens to have more than one term.
+         */
         while ($posts->have_posts()) : $posts->the_post();      
         
           wp_set_object_terms( get_the_ID(), $close_id, $this->taxonomy_status, false );     
 
         endwhile;
         
-        wp_reset_query();        
+        wp_reset_postdata();        
 
       }
       
     }    
+
+    /*
+    * Flush rewrite rules once, after the post type/taxonomy are registered
+    */
+    public function biddopMaybeFlushRewriteRules()
+    {
+      if (get_option('biddop_flush_rewrite_rules')) {
+        delete_option('biddop_flush_rewrite_rules');
+        flush_rewrite_rules();
+      }
+    }
     /* 
     * Register admin styles and scripts
     */
@@ -239,7 +268,7 @@ if (!class_exists('BiddopAdminPanel'))
         <input
           class='bidding-opportunity-admin-input'
           type='text'
-          value='<?php echo $philgeps_reg_no; ?>'
+          value='<?php echo esc_attr($philgeps_reg_no); ?>'
           name='<?php echo $this->variable_prefix; ?>philgeps_registration_no'
           placeholder="Philgeps reference number" required
         />
@@ -268,7 +297,7 @@ if (!class_exists('BiddopAdminPanel'))
         <input
           class="bidding-opportunity-admin-input"
           type="text"
-          value="<?php echo $title; ?>"
+          value="<?php echo esc_attr($title); ?>"
           name="<?php echo $this->variable_prefix?>title"
           placeholder="Bidding title"
           required
@@ -280,7 +309,7 @@ if (!class_exists('BiddopAdminPanel'))
           class="bidding-opportunity-admin-input"
           type="number"
           step=".01"
-          value="<?php echo $abc; ?>"
+          value="<?php echo esc_attr($abc); ?>"
           name="<?php echo $this->variable_prefix;?>abc"
           placeholder="Approved Budget for the Contract"
           required
@@ -293,7 +322,7 @@ if (!class_exists('BiddopAdminPanel'))
           <input
             class="bidding-opportunity-admin-input"
             type="date"
-            value="<?php echo $publish_date; ?>"
+            value="<?php echo esc_attr($publish_date); ?>"
             name="<?php echo $this->variable_prefix; ?>publish_date"
             required
           />
@@ -303,7 +332,7 @@ if (!class_exists('BiddopAdminPanel'))
           <input
             class="bidding-opportunity-admin-input"
             type="date"
-            value="<?php echo $closing_date; ?>"
+            value="<?php echo esc_attr($closing_date); ?>"
             name="<?php echo $this->variable_prefix; ?>closing_date"
             required
           />
@@ -319,7 +348,7 @@ if (!class_exists('BiddopAdminPanel'))
               <input
                 class="bidding-opportunity-admin-input"
                 type="date"
-                value="<?php echo $prebid_date; ?>"
+                value="<?php echo esc_attr($prebid_date); ?>"
                 name="<?php echo $this->variable_prefix; ?>prebid_date"
               />
             </div>
@@ -328,7 +357,7 @@ if (!class_exists('BiddopAdminPanel'))
               <input
                 class="bidding-opportunity-admin-input"
                 type="text"
-                value="<?php echo $prebid_link; ?>"
+                value="<?php echo esc_attr($prebid_link); ?>"
                 name="<?php echo $this->variable_prefix; ?>prebid_link"
                 placeholder="Link of Prebid Document"
               />
@@ -338,7 +367,7 @@ if (!class_exists('BiddopAdminPanel'))
         </div>
         
         <div class="bidding-opportunity-supplemental-container" style="border:1px solid rgba(0,0,0,0.3);margin:10px 0;padding: 10px;border-radius:5px;">          
-          <input type="hidden" name="<?php echo $this->variable_prefix; ?>supplemental_documents" value='<?php echo $supplemental_documents; ?>'>          
+          <input type="hidden" name="<?php echo $this->variable_prefix; ?>supplemental_documents" value='<?php echo esc_attr($supplemental_documents); ?>'>          
           <h4><label>Supplemental Document(s):</label></h4>
           <p>
             
@@ -356,9 +385,9 @@ if (!class_exists('BiddopAdminPanel'))
 
                   <span class='badge each-supplemental-document-badge'>
                     <a href='<?php echo esc_url($doc['document_link']); ?>' target='_blank' class='supplemental-document-links'>
-                      <?php echo $doc['document_name']; ?>
+                      <?php echo esc_html($doc['document_name']); ?>
                     </a>
-                    <span class='supplemental-action-delete' data-document_title='<?php echo $doc['document_name']; ?>'>
+                    <span class='supplemental-action-delete' data-document_title='<?php echo esc_attr($doc['document_name']); ?>'>
                       <span class='dashicons dashicons-no' title='Delete'></span>
                     </span>
                   </span>
@@ -402,7 +431,7 @@ if (!class_exists('BiddopAdminPanel'))
         <input
           class="bidding-opportunity-admin-input"
           type="text"
-          value="<?php echo $bid_docs; ?>"
+          value="<?php echo esc_attr($bid_docs); ?>"
           name="<?php echo $this->variable_prefix; ?>attachment"
           placeholder="Attachment link"
           required
@@ -417,17 +446,21 @@ if (!class_exists('BiddopAdminPanel'))
               'taxonomy' => $this->taxonomy_status,
               'hide_empty' => false,
           ));          
-          
+
+          if (is_wp_error($status_taxonimies) || empty($status_taxonimies)) {
+            $status_taxonimies = array();
+          }
+           
           $active_tax = array_values(array_filter($status_taxonimies, function($obj) {
             return $obj->name === 'Active';              
           }));         
           //default selected to active
-          $selected_id = $active_tax[0]->term_id;
+          $selected_id = !empty($active_tax) ? $active_tax[0]->term_id : 0;
 
           $selected_status = get_the_terms($post->ID, $this->taxonomy_status);
           $selected_status_slug = '';                    
           
-          if(!empty($selected_status)) {
+          if(!empty($selected_status) && !is_wp_error($selected_status)) {
             //set id of selected status if not empty
             $selected_id = intval($selected_status[0]->term_id);
             $selected_status_slug = $selected_status[0]->slug;
@@ -452,7 +485,7 @@ if (!class_exists('BiddopAdminPanel'))
           <input
             class="bidding-opportunity-admin-input"
             type="text"
-            value="<?php echo $supplier_name; ?>"
+            value="<?php echo esc_attr($supplier_name); ?>"
             name="<?php echo $this->variable_prefix; ?>supplier_name"
             placeholder="Supplier Name"
           />
@@ -463,7 +496,7 @@ if (!class_exists('BiddopAdminPanel'))
             class="bidding-opportunity-admin-input"
             type="number"
             step=".01"
-            value="<?php echo $contract_amount; ?>"
+            value="<?php echo esc_attr($contract_amount); ?>"
             name="<?php echo $this->variable_prefix; ?>contract_amount"
             placeholder="Contract Amount"
           />
@@ -507,10 +540,20 @@ if (!class_exists('BiddopAdminPanel'))
       if ( isset($_GET['action']) && $_GET['action'] === 'untrash' ) {
         return;
       }
+      //only handle this custom post type
+      if ( ! ( $post instanceof \WP_Post ) || $post->post_type !== $this->cpt_name ) {
+        return;
+      }
+
       //return if post status is auto-draft or trash
       if(in_array($post->post_status, array('auto-draft', 'trash'))) {
         return;
       }              
+
+      //make sure the current user is allowed to edit this post
+      if ( ! current_user_can( 'edit_post', $post_id ) ) {
+        return;
+      }
       
       $philgeps = isset($_POST[$this->variable_prefix . 'philgeps_registration_no']) ? sanitize_text_field($_POST[$this->variable_prefix . 'philgeps_registration_no']) : "";
       $title = isset($_POST[$this->variable_prefix . 'title']) ? sanitize_text_field($_POST[$this->variable_prefix . 'title']) : "";
@@ -650,46 +693,50 @@ if (!class_exists('BiddopAdminPanel'))
       switch ($column) {
         
         case "bo_title":
-          echo get_post_meta($post_id, $this->variable_prefix . "key_title", true);
+          echo esc_html(get_post_meta($post_id, $this->variable_prefix . "key_title", true));
           break;
         case "bo_philgeps_ref_no":
-          echo get_post_meta($post_id, $this->variable_prefix . "key_philgeps_registration_no", true);
+          echo esc_html(get_post_meta($post_id, $this->variable_prefix . "key_philgeps_registration_no", true));
           break;
         case "bo_abc":
-          echo get_post_meta($post_id, $this->variable_prefix . "key_abc", true) ? '₱' . number_format(get_post_meta($post_id, $this->variable_prefix . "key_abc", true), 2) : '';
+          $abc = get_post_meta($post_id, $this->variable_prefix . "key_abc", true);
+          echo ('' !== $abc) ? esc_html('₱' . number_format((float) $abc, 2)) : '';
           break;
         case "bo_publish_date":
-          echo date('F j, Y', strtotime(get_post_meta($post_id, $this->variable_prefix . "key_publish_date", true)));
+          echo esc_html($this->biddopFormatDate(get_post_meta($post_id, $this->variable_prefix . "key_publish_date", true)));
           break;
         case "bo_closing_date":
-          echo date('F j, Y', strtotime(get_post_meta($post_id, $this->variable_prefix . "key_closing_date", true)));
+          echo esc_html($this->biddopFormatDate(get_post_meta($post_id, $this->variable_prefix . "key_closing_date", true)));
           break;
         case "bo_prebid_date":
           $prebid_link = get_post_meta($post_id, $this->variable_prefix . "key_prebid_link", true);
-          $prebid_date = get_post_meta($post_id, $this->variable_prefix . "key_prebid_date", true) ? date('F j, Y', strtotime(get_post_meta($post_id, $this->variable_prefix . "key_prebid_date", true))) : '';
+          $prebid_date = $this->biddopFormatDate(get_post_meta($post_id, $this->variable_prefix . "key_prebid_date", true));
           
-          echo $prebid_date;
+          echo esc_html($prebid_date);
 
           if($prebid_link) {
-            echo "<div class='biddop-admin-link'><a href='" . esc_url($prebid_link) . "' target='_blank'><span class='biddop-admin-link-exerp'>" . $prebid_link . "</span></div>";
+            echo "<div class='biddop-admin-link'><a href='" . esc_url($prebid_link) . "' target='_blank'><span class='biddop-admin-link-exerp'>" . esc_html($prebid_link) . "</span></div>";
           }
 
           break;        
         case "bo_status":
-          $term = get_the_terms($post_id, $this->taxonomy_status);
+          $term = $this->biddopGetPrimaryStatus($post_id);
           $status_name = '';
           $status_class = '';
 
-          if(!empty($term)) {
-            $status_name = $term[0]->name;
-            $status_class = 'bid-opportunity-status-' . $term[0]->slug;
+          if($term) {
+            $status_name = $term->name;
+            $status_class = 'bid-opportunity-status-' . $term->slug;
           }          
 
-          echo "<span class='" . $status_class . "'>" . $status_name . "</span>";
+          echo "<span class='" . esc_attr($status_class) . "'>" . esc_html($status_name) . "</span>";
 
-          if(!empty($term) && $term[0]->slug === 'awarded') {
-            echo get_post_meta($post_id, $this->variable_prefix . "key_supplier_name", true) ? "<br /><small>Supplier:</small> " . get_post_meta($post_id, $this->variable_prefix . "key_supplier_name", true) : '';
-            echo get_post_meta($post_id, $this->variable_prefix . "key_contract_amount", true) ? '<br /><small>Contract Amount:</small> ₱' . number_format(get_post_meta($post_id, $this->variable_prefix . "key_contract_amount", true), 2) : '';
+          if($term && $term->slug === 'awarded') {
+            $supplier_name = get_post_meta($post_id, $this->variable_prefix . "key_supplier_name", true);
+            $contract_amount = get_post_meta($post_id, $this->variable_prefix . "key_contract_amount", true);
+
+            echo $supplier_name ? "<br /><small>Supplier:</small> " . esc_html($supplier_name) : '';
+            echo ('' !== $contract_amount) ? '<br /><small>Contract Amount:</small> ₱' . esc_html(number_format((float) $contract_amount, 2)) : '';
           }   
           
           break;
@@ -711,7 +758,9 @@ if (!class_exists('BiddopAdminPanel'))
                 $supplemental_documents .= "<span style='font-size:12px'>Supplemental document(s):</span>";
                 //loop for each document
                 foreach ($documents_array as $document) {
-                  $supplemental_documents .= "<div><li class='biddop-admin-supplemental-list biddop-admin-link'><a href='" . esc_url($document['document_link']) . "' target='_blank'>" . $document['document_name'] . "</a></li></div>";
+                  $document_link = isset($document['document_link']) ? $document['document_link'] : '';
+                  $document_name = isset($document['document_name']) ? $document['document_name'] : '';
+                  $supplemental_documents .= "<div><li class='biddop-admin-supplemental-list biddop-admin-link'><a href='" . esc_url($document_link) . "' target='_blank'>" . esc_html($document_name) . "</a></li></div>";
                 }
 
                 $supplemental_documents .= "</div>";                
@@ -727,14 +776,17 @@ if (!class_exists('BiddopAdminPanel'))
             echo $supplemental_documents;                      
 
           break;
-        case "bo_attachment":         
+        case "bo_attachment":
+          $attachment_url = get_post_meta($post_id, $this->variable_prefix . "key_attachment", true);
+          if (!empty($attachment_url)) {
           ?>
           <span class='biddop-admin-link'>
-            <a href="<?php echo esc_url(get_post_meta($post_id, $this->variable_prefix . "key_attachment", true)); ?>" target="_blank" rel="noopener noreferrer">            
+            <a href="<?php echo esc_url($attachment_url); ?>" target="_blank" rel="noopener noreferrer">            
               <span class="dashicons dashicons-external"></span>
             </a>
           </span>
         <?php
+          }
           break;
         default: 
           break;
@@ -750,35 +802,44 @@ if (!class_exists('BiddopAdminPanel'))
         // Ensure this runs only in the admin dashboard panel on the main list query
         if ( ! is_admin() || ! $query->is_main_query() ) {
           return;
-        }        
-        //on ly run if page is in this custom post type and orderby is not null
-        if($typenow == $this->cpt_name && $query->get( 'orderby' )) {
-          
-          $custom_sortable_columns = array(
-            $this->variable_prefix . 'key_title' => 'meta_value',
-            $this->variable_prefix . 'key_abc' => 'meta_value_num',
-            $this->variable_prefix . 'key_closing_date' => 'meta_value',
-            $this->variable_prefix . 'key_publish_date' => 'meta_value',
-            $this->variable_prefix . 'key_mode' => 'meta_value',
-            $this->variable_prefix . 'key_prebid_date' => 'meta_value'
-          );
-          
-          $custom_sortable_date_columns = array(
-            $this->variable_prefix . 'key_closing_date',
-            $this->variable_prefix . 'key_publish_date',
-            $this->variable_prefix . 'key_prebid_date'
-          );
-          
-          if(array_key_exists($query->get( 'orderby' ), $custom_sortable_columns)) {
-            
-            $query->set( 'meta_key', $query->get( 'orderby' ) );
-            $query->set( 'orderby', $custom_sortable_columns[$query->get( 'orderby' )] );
-            //add meta type if sort by date column
-            if(in_array($query->get( 'orderby' ), $custom_sortable_date_columns)) {
-              $query->set( 'meta_type', 'DATE' );
-            }            
+        }
 
-          }          
+        //only run if page is in this custom post type
+        if($typenow !== $this->cpt_name) {
+          return;
+        }
+
+        //remember the requested orderby before it gets replaced below
+        $orderby = $query->get( 'orderby' );
+
+        if ( ! $orderby || ! is_string( $orderby ) ) {
+          return;
+        }
+          
+        $custom_sortable_columns = array(
+          $this->variable_prefix . 'key_title' => 'meta_value',
+          $this->variable_prefix . 'key_abc' => 'meta_value_num',
+          $this->variable_prefix . 'key_closing_date' => 'meta_value',
+          $this->variable_prefix . 'key_publish_date' => 'meta_value',
+          $this->variable_prefix . 'key_mode' => 'meta_value',
+          $this->variable_prefix . 'key_prebid_date' => 'meta_value'
+        );
+        
+        $custom_sortable_date_columns = array(
+          $this->variable_prefix . 'key_closing_date',
+          $this->variable_prefix . 'key_publish_date',
+          $this->variable_prefix . 'key_prebid_date'
+        );
+        
+        if(array_key_exists($orderby, $custom_sortable_columns)) {
+          
+          $query->set( 'meta_key', $orderby );
+          $query->set( 'orderby', $custom_sortable_columns[$orderby] );
+          //add meta type if sort by date column
+          if(in_array($orderby, $custom_sortable_date_columns)) {
+            $query->set( 'meta_type', 'DATE' );
+          }            
+
         }
         
     }

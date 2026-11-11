@@ -9,9 +9,11 @@
   Plugin Name: Bidding Opportunity Custom Post Type
   Description: This is a simple plugin for purpose of having a custom post type named bidding opportunity
   Plugin URI: https://github.com/ryankimjanobas/bidding-opportunity-cpt
-  Version: 1.0.0
+  Version: 1.0.1
   Author: Ryan Kim Janobas
-  License: GPLv2 or later  
+  License: GPLv2 or later
+  Requires at least: 5.9
+  Requires PHP: 7.4
 */
 
 defined('ABSPATH') or die('Hey, you should not be here!');

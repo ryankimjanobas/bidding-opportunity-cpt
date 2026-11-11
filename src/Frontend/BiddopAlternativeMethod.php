@@ -29,6 +29,7 @@ if (!class_exists('BiddopAlternativeMethod')) {
     
     public function biddopAlternativeMethodDatatableShortcode()
     {
+      $this->biddopEnqueueFrontendAssets();
 
     ?>     
 
@@ -76,6 +77,7 @@ if (!class_exists('BiddopAlternativeMethod')) {
 
     public function biddopAlternativeMethodTransparencyDatatableShortcode()
     {
+      $this->biddopEnqueueFrontendAssets();
 
     ?>     
 

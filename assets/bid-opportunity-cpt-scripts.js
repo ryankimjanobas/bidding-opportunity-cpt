@@ -27,7 +27,8 @@ jQuery(document).ready(function($) {
       search: "",
       searchPlaceholder: "Search...",
     },
-    lengthMenu: [[25, 50, 100],[25, 50, 100]],
+    lengthMenu: [[10, 25, 50, 100], [10, 25, 50, 100]],
+    pageLength: 10,
     columns: [        
         { data: 'counter' },
         { data: 'title' },
@@ -43,14 +44,14 @@ jQuery(document).ready(function($) {
     columnDefs: [
       {
         orderable: false,
-        "targets": [0, 5, 6, 7, 8]
+        "targets": [0, 6, 7, 8, 9]
       },
       {
         targets: [8],
         className: 'text-center'
       }
     ],
-    order: [[0, 'DESC']],
+    order: [[4, 'DESC']],
   }); 
   let bo_cpt_public_bidding_completed_table;
   //initialize the datatable for shortcode intended for transparency public bidding
@@ -69,7 +70,8 @@ jQuery(document).ready(function($) {
       search: "",
       searchPlaceholder: "Search...",
     },
-    lengthMenu: [ [25, 50, 100],[25, 50, 100] ],
+    lengthMenu: [ [10, 25, 50, 100], [10, 25, 50, 100] ],
+    pageLength: 10,
     columns: [        
         { data: 'counter' },
         { data: 'title' },
@@ -86,14 +88,14 @@ jQuery(document).ready(function($) {
     columnDefs: [
       {
         orderable: false,
-        "targets": [0, 5, 6]
+        "targets": [0, 6, 7, 8, 9, 10]
       },
       {
         targets: [10],
         className: 'text-center'
       }
     ],
-    order: [[0, 'DESC']],
+    order: [[4, 'DESC']],
   });
 
   /* 
@@ -116,7 +118,8 @@ jQuery(document).ready(function($) {
       search: "",
       searchPlaceholder: "Search...",
     },
-    lengthMenu: [[25, 50, 100],[25, 50, 100]],
+    lengthMenu: [[10, 25, 50, 100], [10, 25, 50, 100]],
+    pageLength: 10,
     columns: [        
         { data: 'counter' },
         { data: 'title' },
@@ -130,14 +133,14 @@ jQuery(document).ready(function($) {
     columnDefs: [
       {
         orderable: false,
-        "targets": [0, 5, 6]
+        "targets": [0, 6, 7]
       },
       {
         targets: [6],
         className: 'text-center'
       }
     ],
-    order: [[0, 'DESC']],
+    order: [[4, 'DESC']],
   });
   let bo_cpt_alternative_method_completed_table;
   //initialize the datatable for shortcode intended for transparency of alternative method of procurement
@@ -156,7 +159,8 @@ jQuery(document).ready(function($) {
       search: "",
       searchPlaceholder: "Search...",
     },
-    lengthMenu: [ [25, 50, 100],[25, 50, 100] ],
+    lengthMenu: [ [10, 25, 50, 100], [10, 25, 50, 100] ],
+    pageLength: 10,
     columns: [        
         { data: 'counter' },
         { data: 'title' },
@@ -171,14 +175,14 @@ jQuery(document).ready(function($) {
     columnDefs: [
       {
         orderable: false,
-        "targets": [0, 5]
+        "targets": [0, 6, 7, 8]
       },
       {
         targets: [8],
         className: 'text-center'
       }
     ],
-    order: [[0, 'DESC']],
+    order: [[4, 'DESC']],
   });
   /* 
   * handle the reload of datatable onchange of datatable filter on frontend

@@ -31,14 +31,15 @@ if (!class_exists('BiddopFrontendCommonMethods')) {
     }    
 
     public function biddopEnqueueFrontendScripts()
-    {      
-      //datables scripts
-      wp_enqueue_script($this->cpt_name . 'datatables-scripts', "$this->plugin_url/assets/DataTables/datatables.min.js", array('jquery'), '2.3.8', true);      
-      wp_localize_script($this->cpt_name . 'datatables-scripts', 'biddingopportunitydatatablesajax', ['url' => admin_url('admin-ajax.php')]);
-      wp_enqueue_style($this->cpt_name . 'datatables-scripts', "$this->plugin_url/assets/DataTables/datatables.min.css");
-      //fontend custom scripts
-      wp_enqueue_script($this->cpt_name . '_scripts', "$this->plugin_url/assets/bid-opportunity-cpt-scripts.js", array('jquery'), '1.0.0', true);
-      wp_enqueue_style($this->cpt_name . '_styles', "$this->plugin_url/assets/bid-opportunity-cpt-styles.css");
+    {
+      /*
+       * Only load the datatable assets on pages that actually render one of the
+       * shortcodes. Shortcode callbacks enqueue the assets as a fallback for
+       * content that is not stored in post_content (page builders, widgets...).
+       */
+      if ($this->biddopPageHasShortcode()) {
+        $this->biddopEnqueueFrontendAssets();
+      }
     }
 
     public function biddopFrontendAjaxEndpoint()
@@ -49,22 +50,46 @@ if (!class_exists('BiddopFrontendCommonMethods')) {
     *    bid-opportunities-public, bid-opportunities-alternative, transparency-public and transparency-alternative
     */
       $request = $_GET;
-      $posts_per_page = $request['length'];
-      $offset = $request['start'];
-      $orderBy = $request['order'][0]['column'];
-      $orderDir = $request['order'][0]['dir'] ?? 'desc';
-      $search = $request['search']['value'];
-      $page_identifier = $request['identifier'];
-      $year_publish_filter = $request['year_publish_filter'];
-           
-      $columns = array(
-        1 => 'order_by_title',
-        2 => 'order_by_abc',
-        3 => 'order_by_publish_date',
-        4 => 'order_by_closing_date',
-        0 => 'order_by_publish_date' //default order
+
+      $default_length = 10;
+      $posts_per_page = isset($request['length']) ? intval($request['length']) : $default_length;
+
+      // Guard against invalid or unbounded page sizes.
+      if ($posts_per_page < 1 || $posts_per_page > 100) {
+        $posts_per_page = $default_length;
+      }
+
+      $offset              = isset($request['start']) ? max(0, intval($request['start'])) : 0;
+      $draw                = isset($request['draw']) ? intval($request['draw']) : 0;
+      $search              = isset($request['search']['value']) ? sanitize_text_field(wp_unslash($request['search']['value'])) : '';
+      $page_identifier     = isset($request['identifier']) ? sanitize_key($request['identifier']) : '';
+      $year_publish_filter = isset($request['year_publish_filter']) ? sanitize_text_field(wp_unslash($request['year_publish_filter'])) : '';
+
+      if (!preg_match('/^\d{4}$/', $year_publish_filter)) {
+        $year_publish_filter = '';
+      }
+
+      /*
+       * Column index => meta key/type used for sorting.
+       * Columns 1 to 5 have the same meaning on all four datatables.
+       */
+      $sortable_columns = array(
+        1 => array('key' => $this->variable_prefix . 'key_title', 'type' => 'CHAR'),
+        2 => array('key' => $this->variable_prefix . 'key_philgeps_registration_no', 'type' => 'CHAR'),
+        3 => array('key' => $this->variable_prefix . 'key_abc', 'type' => 'NUMERIC'),
+        4 => array('key' => $this->variable_prefix . 'key_publish_date', 'type' => 'DATE'),
+        5 => array('key' => $this->variable_prefix . 'key_closing_date', 'type' => 'DATE'),
       );
-      
+
+      $default_sort_column = 4;
+      $sort_column = isset($request['order'][0]['column']) ? intval($request['order'][0]['column']) : $default_sort_column;
+
+      if (!isset($sortable_columns[$sort_column])) {
+        $sort_column = $default_sort_column;
+      }
+
+      $sort_dir = (isset($request['order'][0]['dir']) && 'ASC' === strtoupper($request['order'][0]['dir'])) ? 'ASC' : 'DESC';
+
       $meta_query_value = 'public';
       $tax_query = array();
 
@@ -84,7 +109,7 @@ if (!class_exists('BiddopFrontendCommonMethods')) {
             'terms'    => 'awarded'
           );  
           break;
-        case 'bid-opportunities-alternative': //only get non-awarded public bidding
+        case 'bid-opportunities-alternative': //only get non-awarded alternative bidding
           //only get alternative bidding
           $meta_query_value = 'alternative';
           $tax_query = array( 
@@ -94,7 +119,7 @@ if (!class_exists('BiddopFrontendCommonMethods')) {
             'operator' => 'NOT IN',
           );          
           break;        
-        case 'transparency-alternative': //only get awarded public bidding
+        case 'transparency-alternative': //only get awarded alternative bidding
           //only get alternative bidding
           $meta_query_value = 'alternative';
           $tax_query = array( 
@@ -107,62 +132,60 @@ if (!class_exists('BiddopFrontendCommonMethods')) {
           break;
       }
 
-      $meta_query = array(
-          array(
-            'key'     => $this->variable_prefix . 'key_mode',
-            'value'   => $meta_query_value,
-            'compare' => '='
-          ),
-          array(
-            'key'     => $this->variable_prefix . 'key_title',
-            'value'   => $search,
-            'compare' => 'LIKE'
-          ),          
-          'order_by_title' => array(
-            'key'     => $this->variable_prefix . 'key_title',
-            'compare' => 'EXISTS'
-          ),
-          'order_by_abc' => array(
-            'key'     => $this->variable_prefix . 'key_abc',
-            'compare' => 'EXISTS',
-            'type'    => 'NUMERIC'
-          ),
-          'order_by_publish_date' => array(
-            'key'     => $this->variable_prefix . 'key_publish_date',
-            'compare' => 'EXISTS',
-            'type'    => 'DATE'
-          ),
-          'order_by_closing_date' => array(
-            'key'     => $this->variable_prefix . 'key_closing_date',
-            'compare' => 'EXISTS',
-            'type'    => 'DATE'
-          )          
+      // Restricts the datatable to its mode of procurement.
+      $mode_query = array(
+        array(
+          'key'     => $this->variable_prefix . 'key_mode',
+          'value'   => $meta_query_value,
+          'compare' => '='
+        )
       );
 
-      if($year_publish_filter && $year_publish_filter !== '') {
-        array_push($meta_query,
-          array(
-            'key'     => $this->variable_prefix . 'key_publish_date',
-            'value'   => array( $year_publish_filter . '-01-01', $year_publish_filter . '-12-31' ),
-            'compare' => 'BETWEEN',
-            'type'    => 'DATE',
-          )
+      $meta_query = array_merge($mode_query, array(
+        'search' => array(
+          'key'     => $this->variable_prefix . 'key_title',
+          'value'   => $search,
+          'compare' => 'LIKE'
+        ),
+        'order_by' => array(
+          'key'     => $sortable_columns[$sort_column]['key'],
+          'compare' => 'EXISTS',
+          'type'    => $sortable_columns[$sort_column]['type']
+        )
+      ));
+
+      if (!empty($year_publish_filter)) {
+        $meta_query['year_publish'] = array(
+          'key'     => $this->variable_prefix . 'key_publish_date',
+          'value'   => array( $year_publish_filter . '-01-01', $year_publish_filter . '-12-31' ),
+          'compare' => 'BETWEEN',
+          'type'    => 'DATE',
         );
       }
 
       $data = [];
 
       $posts = new \WP_Query(array(
-        'post_type' => 'bid_opportunity',
-        'tax_query'  => count($tax_query) ? array($tax_query) : '',
+        'post_type' => $this->cpt_name,
+        'tax_query'  => $tax_query ? array($tax_query) : array(),
         'meta_query' => $meta_query,
         'posts_per_page' => $posts_per_page,
         'offset' => $offset,        
-        'orderby' => $columns[$orderBy],        
-        'order' => $orderDir
-      ));     
-      
-      $totalData = intval($posts->found_posts);
+        'orderby' => 'order_by',
+        'order' => $sort_dir
+      ));
+
+      // Unfiltered count for this datatable (mode/taxonomy scope only).
+      $total_query = new \WP_Query(array(
+        'post_type' => $this->cpt_name,
+        'tax_query'  => $tax_query ? array($tax_query) : array(),
+        'meta_query' => $mode_query,
+        'posts_per_page' => 1,
+        'fields' => 'ids'
+      ));
+
+      $totalData = intval($total_query->found_posts);
+      $filteredData = intval($posts->found_posts);
 
       if ($posts->have_posts()) {
 
@@ -170,46 +193,63 @@ if (!class_exists('BiddopFrontendCommonMethods')) {
        
         while ($posts->have_posts()) : $posts->the_post();
 
-          $status = get_the_terms( get_the_ID(), $this->taxonomy_status );
+          $post_id = get_the_ID();
+          $status = $this->biddopGetPrimaryStatus($post_id);
           
-          $title = get_post_meta(get_the_ID(), $this->variable_prefix . 'key_title', true) ? get_post_meta(get_the_ID(), $this->variable_prefix . 'key_title', true) : '';
-          $philgeps_ref_no = get_post_meta(get_the_ID(), $this->variable_prefix . 'key_philgeps_registration_no', true) ? get_post_meta(get_the_ID(), $this->variable_prefix . 'key_philgeps_registration_no', true) : '';
-          $abc = get_post_meta(get_the_ID(), $this->variable_prefix . 'key_abc', true) ? '₱' . number_format(get_post_meta(get_the_ID(), $this->variable_prefix . 'key_abc', true), 2) : '';
-          $publish_date = get_post_meta(get_the_ID(), $this->variable_prefix . 'key_publish_date', true) ? date('F j, Y', strtotime(get_post_meta(get_the_ID(), $this->variable_prefix . 'key_publish_date', true))) : '';
-          $closing_date = get_post_meta(get_the_ID(), $this->variable_prefix . 'key_closing_date', true) ? date('F j, Y', strtotime(get_post_meta(get_the_ID(), $this->variable_prefix . 'key_closing_date', true))) : '';
-          $prebid_date = get_post_meta(get_the_ID(), $this->variable_prefix . 'key_prebid_date', true) ? date('F j, Y', strtotime(get_post_meta(get_the_ID(), $this->variable_prefix . 'key_prebid_date', true))) : '';
-          $prebid_link = get_post_meta(get_the_ID(), $this->variable_prefix . 'key_prebid_link', true) ? get_post_meta(get_the_ID(), $this->variable_prefix . 'key_prebid_link', true) : '';          
-          $supplier_name = get_post_meta(get_the_ID(), $this->variable_prefix . 'key_supplier_name', true) ? get_post_meta(get_the_ID(), $this->variable_prefix . 'key_supplier_name', true) : '';
-          $contract_amount = get_post_meta(get_the_ID(), $this->variable_prefix . 'key_contract_amount', true) ? '₱' . number_format(get_post_meta(get_the_ID(), $this->variable_prefix . 'key_contract_amount', true), 2) : '';          
-          $attachment = "<a href='" . esc_url(get_post_meta(get_the_ID(), $this->variable_prefix . 'key_attachment', true)) . "' target='_blank' title='Click to see Attachment' class='bid-opportunity-datatable-attachment-icon'>
-                <img src='" . $this->plugin_url . "/assets/images/external-link.svg" . "' alt='External Link' width='25' />
-                </a>";
+          $title = get_post_meta($post_id, $this->variable_prefix . 'key_title', true);
+          $philgeps_ref_no = get_post_meta($post_id, $this->variable_prefix . 'key_philgeps_registration_no', true);
+          $abc_raw = get_post_meta($post_id, $this->variable_prefix . 'key_abc', true);
+          $abc = ('' !== $abc_raw) ? '₱' . number_format((float) $abc_raw, 2) : '';
+          $publish_date = $this->biddopFormatDate(get_post_meta($post_id, $this->variable_prefix . 'key_publish_date', true));
+          $closing_date = $this->biddopFormatDate(get_post_meta($post_id, $this->variable_prefix . 'key_closing_date', true));
+          $prebid_date = $this->biddopFormatDate(get_post_meta($post_id, $this->variable_prefix . 'key_prebid_date', true));
+          $prebid_link = get_post_meta($post_id, $this->variable_prefix . 'key_prebid_link', true);
+          $supplier_name = get_post_meta($post_id, $this->variable_prefix . 'key_supplier_name', true);
+          $contract_amount_raw = get_post_meta($post_id, $this->variable_prefix . 'key_contract_amount', true);
+          $contract_amount = ('' !== $contract_amount_raw) ? '₱' . number_format((float) $contract_amount_raw, 2) : '';
 
-          $supplemental_docs = get_post_meta(get_the_ID(), $this->variable_prefix . 'key_supplemental_documents', true) ? json_decode(get_post_meta(get_the_ID(), $this->variable_prefix . 'key_supplemental_documents', true), true) : [];
+          $attachment_url = get_post_meta($post_id, $this->variable_prefix . 'key_attachment', true);
+          $attachment = '';
+          if (!empty($attachment_url)) {
+            $attachment = "<a href='" . esc_url($attachment_url) . "' target='_blank' rel='noopener noreferrer' title='Click to see Attachment' class='bid-opportunity-datatable-attachment-icon'>"
+              . "<img src='" . esc_url($this->plugin_url . 'assets/images/external-link.svg') . "' alt='External Link' width='25' />"
+              . "</a>";
+          }
+
+          $supplemental_docs = get_post_meta($post_id, $this->variable_prefix . 'key_supplemental_documents', true);
+          $supplemental_docs = $supplemental_docs ? json_decode($supplemental_docs, true) : array();
           $supplemental = '';
-          if(!empty($supplemental_docs)) {
+          if (is_array($supplemental_docs)) {
             foreach ($supplemental_docs as $doc) {
-              $supplemental .= "<li class='biddop-frontend-supplemental-list'><a href='" . esc_url($doc['document_link']) . "' target='_blank'>" . $doc['document_name'] . "</a></li>";
+              $document_link = isset($doc['document_link']) ? $doc['document_link'] : '';
+              $document_name = isset($doc['document_name']) ? $doc['document_name'] : '';
+              $supplemental .= "<li class='biddop-frontend-supplemental-list'><a href='" . esc_url($document_link) . "' target='_blank'>" . esc_html($document_name) . "</a></li>";
             }
-          }                    
+          }
+
           $formatted_prebid_link = '';
-          if($prebid_link) {
-            $formatted_prebid_link .= "<br><a href='" . esc_url($prebid_link) . "' target='_blank' title='" . $prebid_link . "'><span class='biddop-frontend-prebid-link-exerp'>" . $prebid_link . "</span></a>";
+          if (!empty($prebid_link)) {
+            $formatted_prebid_link .= "<br><a href='" . esc_url($prebid_link) . "' target='_blank' title='" . esc_attr($prebid_link) . "'><span class='biddop-frontend-prebid-link-exerp'>" . esc_html($prebid_link) . "</span></a>";
+          }
+
+          $status_html = '';
+          if ($status) {
+            $status_html = "<span class='" . esc_attr('bid-opportunity-status-' . $status->slug) . "'>" . esc_html($status->name) . "</span>";
           }
 
           array_push($data, [            
             'counter'         => $counter++ + $offset,
-            'title'           => $title,
-            'philgeps_ref_no' => $philgeps_ref_no,
-            'abc'             => $abc,
-            'publish_date'    => $publish_date,
-            'closing_date'    => $closing_date,
+            'title'           => esc_html($title),
+            'philgeps_ref_no' => esc_html($philgeps_ref_no),
+            'abc'             => esc_html($abc),
+            'publish_date'    => esc_html($publish_date),
+            'closing_date'    => esc_html($closing_date),
             'prebid_date'     => $prebid_date . $formatted_prebid_link,
             'supplemental'    => $supplemental,
-            'supplier_name'   => $supplier_name,
-            'contract_amount' => $contract_amount,
+            'supplier_name'   => esc_html($supplier_name),
+            'contract_amount' => esc_html($contract_amount),
             'attachment'      => $attachment,
-            'status'          => ( ! empty($status)) ? "<span class='bid-opportunity-status-" . $status[0]->slug . "'>" . $status[0]->name ."</span>" : ''
+            'status'          => $status_html
           ]);                             
 
         endwhile;
@@ -218,14 +258,13 @@ if (!class_exists('BiddopFrontendCommonMethods')) {
 
       }
 
-      echo json_encode([
-        "draw" => intval($request['draw']),
+      wp_send_json([
+        "draw" => $draw,
         "recordsTotal" => $totalData,
-        "recordsFiltered" => $totalData,
+        "recordsFiltered" => $filteredData,
         "data" => $data
       ]);
 
-      wp_die();
     }        
   }
 
