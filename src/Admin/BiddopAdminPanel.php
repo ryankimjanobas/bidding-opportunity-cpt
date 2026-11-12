@@ -259,8 +259,18 @@ if (!class_exists('BiddopAdminPanel'))
       $supplemental_documents = get_post_meta($post->ID, $this->variable_prefix . "key_supplemental_documents", true);
       $bid_docs = get_post_meta($post->ID, $this->variable_prefix . "key_attachment", true);
       $supplier_name = get_post_meta($post->ID, $this->variable_prefix . "key_supplier_name", true);
-      $contract_amount = get_post_meta($post->ID, $this->variable_prefix . "key_contract_amount", true);                  
-                  
+      $contract_amount = get_post_meta($post->ID, $this->variable_prefix . "key_contract_amount", true);
+      $awarded_date = get_post_meta($post->ID, $this->variable_prefix . "key_awarded_date", true);
+
+      /*
+       * Default the awarded date to today for new bids only. Existing bids that
+       * do not have an awarded date yet stay blank so historical records are
+       * not backfilled with an inaccurate date.
+       */
+      if (empty($awarded_date) && get_post_status($post->ID) === 'auto-draft') {
+        $awarded_date = (new \DateTime('now', new \DateTimeZone('Asia/Manila')))->format('Y-m-d');
+      }
+                   
       ?>
       
       <div>
@@ -501,6 +511,15 @@ if (!class_exists('BiddopAdminPanel'))
             placeholder="Contract Amount"
           />
         </div> 
+        <div>
+          <h4><label>Date awarded:</label></h4>          
+          <input
+            class="bidding-opportunity-admin-input"
+            type="date"
+            value="<?php echo esc_attr($awarded_date); ?>"
+            name="<?php echo $this->variable_prefix; ?>awarded_date"
+          />
+        </div> 
 
       </div>
 
@@ -567,6 +586,17 @@ if (!class_exists('BiddopAdminPanel'))
       $supplemental_documents = isset($_POST[$this->variable_prefix . 'supplemental_documents']) ? sanitize_text_field($_POST[$this->variable_prefix . 'supplemental_documents']) : "";      
       $supplier_name = isset($_POST[$this->variable_prefix . 'supplier_name']) ? sanitize_text_field($_POST[$this->variable_prefix . 'supplier_name']) : "";
       $contract_amount = isset($_POST[$this->variable_prefix . 'contract_amount']) ? sanitize_text_field($_POST[$this->variable_prefix . 'contract_amount']) : "";       
+      $awarded_date = isset($_POST[$this->variable_prefix . 'awarded_date']) ? sanitize_text_field($_POST[$this->variable_prefix . 'awarded_date']) : "";
+
+      //resolve the posted status
+      $status_id = isset($_POST[$this->taxonomy_status]) ? intval(sanitize_text_field($_POST[$this->taxonomy_status])) : "";
+      $status_term = $status_id ? get_term($status_id, $this->taxonomy_status) : null;
+      $is_awarded = ( ! is_wp_error($status_term) && $status_term instanceof \WP_Term && $status_term->slug === 'awarded' );
+
+      //only keep the awarded date when the bid is actually awarded
+      if ( ! $is_awarded ) {
+        $awarded_date = "";
+      }
       
       update_post_meta($post_id, $this->variable_prefix . "key_philgeps_registration_no", $philgeps);
       update_post_meta($post_id, $this->variable_prefix . "key_title", $title);
@@ -580,10 +610,12 @@ if (!class_exists('BiddopAdminPanel'))
       update_post_meta($post_id, $this->variable_prefix . "key_supplemental_documents", $supplemental_documents);
       update_post_meta($post_id, $this->variable_prefix . "key_supplier_name", $supplier_name);
       update_post_meta($post_id, $this->variable_prefix . "key_contract_amount", $contract_amount);
+      update_post_meta($post_id, $this->variable_prefix . "key_awarded_date", $awarded_date);
 
       //handle saving of status       
-      $status_id = isset($_POST[$this->taxonomy_status]) ? intval(sanitize_text_field($_POST[$this->taxonomy_status])) : "";
-      wp_set_object_terms( $post_id, $status_id, $this->taxonomy_status, false );                   
+      if ($status_id) {
+        wp_set_object_terms( $post_id, $status_id, $this->taxonomy_status, false );                   
+      }
 
       
       //ensure post title is equal to this meta key title
@@ -734,7 +766,11 @@ if (!class_exists('BiddopAdminPanel'))
           if($term && $term->slug === 'awarded') {
             $supplier_name = get_post_meta($post_id, $this->variable_prefix . "key_supplier_name", true);
             $contract_amount = get_post_meta($post_id, $this->variable_prefix . "key_contract_amount", true);
+            $awarded_date_raw = get_post_meta($post_id, $this->variable_prefix . "key_awarded_date", true);
+            $awarded_date_ts = $awarded_date_raw ? strtotime($awarded_date_raw) : false;
 
+            //show the awarded date beside the status label, e.g. Awarded (Nov 12, 2026)
+            echo $awarded_date_ts ? ' <em style="font-size:11px;">(' . esc_html(date('M j, Y', $awarded_date_ts)) . ')</em>' : '';
             echo $supplier_name ? "<br /><small>Supplier:</small> " . esc_html($supplier_name) : '';
             echo ('' !== $contract_amount) ? '<br /><small>Contract Amount:</small> ₱' . esc_html(number_format((float) $contract_amount, 2)) : '';
           }   
