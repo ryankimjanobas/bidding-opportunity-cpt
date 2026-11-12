@@ -207,6 +207,13 @@ if (!class_exists('BiddopFrontendCommonMethods')) {
           $supplier_name = get_post_meta($post_id, $this->variable_prefix . 'key_supplier_name', true);
           $contract_amount_raw = get_post_meta($post_id, $this->variable_prefix . 'key_contract_amount', true);
           $contract_amount = ('' !== $contract_amount_raw) ? '₱' . number_format((float) $contract_amount_raw, 2) : '';
+          $awarded_date = $this->biddopFormatDate(get_post_meta($post_id, $this->variable_prefix . 'key_awarded_date', true));
+
+          //show the awarded date below the supplier name in the awarded/transparency tables
+          $supplier_name_display = esc_html($supplier_name);
+          if (!empty($awarded_date)) {
+            $supplier_name_display .= ('' !== $supplier_name ? '<br />' : '') . "<small><em>Awarded: " . esc_html($awarded_date) . "</em></small>";
+          }
 
           $attachment_url = get_post_meta($post_id, $this->variable_prefix . 'key_attachment', true);
           $attachment = '';
@@ -246,7 +253,7 @@ if (!class_exists('BiddopFrontendCommonMethods')) {
             'closing_date'    => esc_html($closing_date),
             'prebid_date'     => $prebid_date . $formatted_prebid_link,
             'supplemental'    => $supplemental,
-            'supplier_name'   => esc_html($supplier_name),
+            'supplier_name'   => $supplier_name_display,
             'contract_amount' => esc_html($contract_amount),
             'attachment'      => $attachment,
             'status'          => $status_html
